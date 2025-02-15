@@ -69,7 +69,22 @@ These examples demonstrate `binary` color mode. All bright colors in `binary` co
 
 ## Installation
 
-### Using pip (Recommended)
+### Using pipx (Recommended for CLI-only use)
+If you primarily intend to use `framesvg` as a command-line tool (and don't need the Python library for development), `pipx` is the recommended installation method.  `pipx` installs Python applications in isolated environments, preventing dependency conflicts with other projects. 
+
+```bash
+pipx install framesvg
+```
+
+To install `pipx` if you don't already have it:
+
+```bash
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+```
+(You may need to restart your shell after installing `pipx`.)
+
+### Using pip
 
 The easiest way to install `framesvg` is via pip:
 
