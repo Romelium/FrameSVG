@@ -14,11 +14,11 @@ from framesvg import (
     NotAnimatedGifError,
     NoValidFramesError,
     VTracerOptions,
-    gif_to_animated_svg_write,
-    gif_to_animated_svg,
     create_animated_svg_string,
     extract_inner_svg_content_from_full_svg,
     extract_svg_dimensions_from_content,
+    gif_to_animated_svg,
+    gif_to_animated_svg_write,
     is_animated_gif,
     load_image_wrapper,
     parse_cli_arguments,
@@ -426,9 +426,7 @@ def test_process_gif_frames_integration_tests(mock_image_instance, mock_vtracer_
     assert len(frames) == 1
 
 
-def test_gif_to_animated_svg_comprehensive(
-    tmp_path, mock_image_loader_instance, mock_vtracer_instance_for_tests
-):
+def test_gif_to_animated_svg_comprehensive(tmp_path, mock_image_loader_instance, mock_vtracer_instance_for_tests):
     frame_counts = [2, 5, 10]
     dimension_sets = [(100, 100), (200, 150), (150, 200)]
     fps_values = [10.0, 24.0, 60.0]
@@ -732,9 +730,7 @@ def test_gif_to_animated_svg_closes_image(tmp_path, mock_vtracer_instance_for_te
     mock_image_loader.open.return_value = mock_image  #
 
     # Test case 1: Successful conversion.
-    gif_to_animated_svg(
-        gif_path, image_loader=mock_image_loader, vtracer_instance=mock_vtracer_instance_for_tests
-    )
+    gif_to_animated_svg(gif_path, image_loader=mock_image_loader, vtracer_instance=mock_vtracer_instance_for_tests)
     mock_image.close.assert_called()  # Image Close should have been called.
 
     # reset call count.
@@ -766,7 +762,5 @@ def test_gif_to_animated_svg_closes_image(tmp_path, mock_vtracer_instance_for_te
     mock_image.is_animated = True
     mock_image.close.side_effect = Exception("Simulated close error")  # Set close to raise error.
     with pytest.raises(Exception, match="Simulated close error"):
-        gif_to_animated_svg(
-            gif_path, image_loader=mock_image_loader, vtracer_instance=mock_vtracer_instance_for_tests
-        )
+        gif_to_animated_svg(gif_path, image_loader=mock_image_loader, vtracer_instance=mock_vtracer_instance_for_tests)
     mock_image.close.assert_called()  # should still be called.
