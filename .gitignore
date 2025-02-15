@@ -1,0 +1,21 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+*.spec
+.ruff_cache
+
+# Virtual environments
+.venv
+
+# Testing
+.pytest_cache
+coverage.xml
+.coverage*
+
+# Misc
+dircat.md
+test.md

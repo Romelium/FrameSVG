@@ -1,0 +1,26 @@
+name: Tests
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Hatch
+      uses: pypa/hatch@a3c83ab3d481fbc2dc91dd0088628817488dd1d5
+      
+    - name: Run tests
+      run: hatch test -a
+      
+    - name: Check formatting and lint
+      run: hatch fmt --check
