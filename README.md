@@ -19,10 +19,6 @@
 
 `framesvg` is a command-line tool and Python library that converts animated GIFs into animated SVGs. It leverages the power of [VTracer](https://www.visioncortex.org/vtracer/) for raster-to-vector conversion, producing smooth, scalable, and *true vector* animations.  This is a significant improvement over embedding raster images (like GIFs) directly within SVGs, as `framesvg` generates genuine vector output that plays automatically and scales beautifully.  Ideal for readmes, documentation, and web graphics.
 
-<p align="center">
-Preferred to be viewed on <a href="https://github.com/Romelium/FrameSVG?tab=readme-ov-file">GitHub</a>
-</p>
-
 <br clear="both"/>
 
 ## Why Use framesvg?
