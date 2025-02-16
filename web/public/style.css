@@ -145,3 +145,22 @@ button:hover {
         margin-top: 15px;
     }
 }
+
+/* Footer Styles */
+footer {
+    text-align: center;
+    border-top: 1px solid #ccc;
+    width: 95%;
+    max-width: 1000px;
+    box-sizing: border-box;
+
+}
+
+footer a {
+    color: blue;
+    text-decoration: none;
+}
+footer a:hover {
+   text-decoration: underline;
+}
+
