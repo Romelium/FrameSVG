@@ -69,3 +69,7 @@ python = ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 addopts = [
     "--import-mode=importlib",
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*" = ["S101", "PLR2004"]
+"web/**/*" = ["ALL"]

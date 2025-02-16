@@ -93,9 +93,7 @@ class handler(BaseHTTPRequestHandler):
                 f.write(gif_data)
 
             try:
-                svg_content = gif_to_animated_svg(
-                    temp_gif_path, vtracer_options=vtracer_options, fps=fps
-                )
+                svg_content = gif_to_animated_svg(temp_gif_path, vtracer_options=vtracer_options, fps=fps)
             except NotAnimatedGifError:
                 self.send_error(400, "The provided GIF is not animated.")
                 return
