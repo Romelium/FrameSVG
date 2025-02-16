@@ -19,3 +19,6 @@ coverage.xml
 # Misc
 dircat.md
 test.md
+
+# Vercel
+.vercel

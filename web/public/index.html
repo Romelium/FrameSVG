@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Convert animated GIFs to animated SVGs with framesvg, a command-line tool and Python library.  Leverages VTracer for true vector output, offering scalability and potential file size reduction.">
+    <meta name="keywords"
+        content="FrameSVG, animated SVG, GIF to SVG, VTracer, vector graphics, animation, Python library, command-line tool, image conversion, scalability, romelium">
+    <meta name="author" content="Romelium">
+    <meta name="robots" content="index, follow">
+    <title>FrameSVG: Convert Animated GIFs to Animated SVGs</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>FrameSVG: Animated GIF to Animated SVG</h1>
+        <p>Convert your animated GIFs to scalable, animated SVGs.</p>
+
+        <input type="file" id="gifInput" accept="image/gif">
+        <div id="status"></div>
+
+        <h2>Parameters</h2>
+        <div class="params-grid">
+            <div>
+                <label for="fps">FPS:</label>
+                <input type="number" id="fps" value="10" step="0.1" min="0.1">
+            </div>
+            <div>
+                <label for="colormode">Color Mode:</label>
+                <select id="colormode">
+                    <option value="color">Color</option>
+                    <option value="binary">Binary</option>
+                </select>
+            </div>
+            <div>
+                <label for="hierarchical">Hierarchy:</label>
+                <select id="hierarchical">
+                    <option value="stacked">Stacked</option>
+                    <option value="cutout">Cutout</option>
+                </select>
+            </div>
+            <div>
+                <label for="mode">Mode:</label>
+                <select id="mode">
+                    <option value="polygon">Polygon</option>
+                    <option value="spline">Spline</option>
+                    <option value="none">None</option>
+                </select>
+            </div>
+            <div>
+                <label for="filter_speckle">Filter Speckle:</label>
+                <input type="number" id="filter_speckle" value="4" min="0">
+            </div>
+            <div>
+                <label for="color_precision">Color Precision:</label>
+                <input type="number" id="color_precision" value="8" min="1">
+            </div>
+            <div>
+                <label for="layer_difference">Layer Difference:</label>
+                <input type="number" id="layer_difference" value="16" min="1">
+            </div>
+            <div>
+                <label for="corner_threshold">Corner Threshold:</label>
+                <input type="number" id="corner_threshold" value="60" min="0">
+            </div>
+            <div>
+                <label for="length_threshold">Length Threshold:</label>
+                <input type="number" id="length_threshold" value="4.0" step="0.1" min="0">
+            </div>
+            <div>
+                <label for="max_iterations">Max Iterations:</label>
+                <input type="number" id="max_iterations" value="10" min="1">
+            </div>
+            <div>
+                <label for="splice_threshold">Splice Threshold:</label>
+                <input type="number" id="splice_threshold" value="45" min="0">
+            </div>
+            <div>
+                <label for="path_precision">Path Precision:</label>
+                <input type="number" id="path_precision" value="8" min="0">
+            </div>
+        </div>
+
+        <button id="convertButton">Convert</button>
+        <div id="preview"></div>
+        <a id="downloadLink" style="display: none;">Download SVG</a>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

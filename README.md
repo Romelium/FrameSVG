@@ -236,6 +236,31 @@ hatch test
 hatch -h
 ```
 
+## Dev Web app
+
+### Install Vercel
+
+Install the Vercel CLI globally:
+
+```bash
+npm install -g vercel
+```
+
+### Running Locally
+```bash
+vercel dev
+```
+
+**Setup (First Time Only):**  When running for the *first* time, you'll be prompted to configure settings.  Ensure you set the "In which directory is your code located?" option to `./web`.
+
+**Note:**  The first conversion may take a significant amount of time. This is because the serverless functions need to be built. Subsequent conversions will be faster.
+
+### Deploy to Vercel
+
+```bash
+vercel deploy
+```
+
 ## Contributing
 
 Contributions are welcome!  Please submit pull requests or open issues on the [GitHub repository](https://github.com/romelium/framesvg).
