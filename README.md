@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/romelium/framesvg/actions/workflows/tests.yml"><img alt="Build Status: Passing" src="https://img.shields.io/github/actions/workflow/status/romelium/framesvg/main.yml?branch=main"></a>
+  <a href="https://github.com/romelium/framesvg/actions/workflows/tests.yml"><img alt="Build Status: Passing" src="https://img.shields.io/github/actions/workflow/status/romelium/framesvg/tests.yml"></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
   <a href="https://pypi.org/project/framesvg/"><img alt="PyPI Version" src="https://img.shields.io/pypi/v/framesvg"></a>
   <a href="https://pypi.org/project/framesvg/"><img alt="Python Versions Supported" src="https://img.shields.io/pypi/pyversions/framesvg"></a>
