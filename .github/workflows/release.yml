@@ -1,0 +1,74 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Required to access full git history and tags
+
+    - name: Install Hatch
+      uses: pypa/hatch@a3c83ab3d481fbc2dc91dd0088628817488dd1d5
+
+    - name: Build package
+      run: hatch build
+
+    - name: Setup GitHub CLI
+      uses: actions/setup-gh-cli@v1
+
+    - name: Get previous semantic version tag
+      id: prev_tag
+      run: |
+        git tag --sort=-v:refname > tags.txt
+        current_tag="${{ github.ref_name }}"
+        line_number=$(grep -nxF "$current_tag" tags.txt | cut -d: -f1)
+        
+        if [ "$line_number" -gt 1 ]; then
+          prev_line=$((line_number - 1))
+          prev_tag=$(sed -n "${prev_line}p" tags.txt)
+          echo "prev_tag=$prev_tag" >> $GITHUB_OUTPUT
+        else
+          echo "prev_tag=" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Generate changelog
+      id: changelog
+      run: |
+        current_tag="${{ github.ref_name }}"
+        prev_tag="${{ steps.prev_tag.outputs.prev_tag }}"
+        
+        if [ -z "$prev_tag" ]; then
+          log_range="$current_tag"
+        else
+          log_range="$prev_tag..$current_tag"
+        fi
+
+        # Extract conventional commits and format as markdown
+        commits=$(git log --pretty=format:"%s" "$log_range")
+        filtered_commits=$(echo "$commits" | grep -E '^(feat|fix):' || true)
+
+        if [ -z "$filtered_commits" ]; then
+          changelog_content="No notable changes (maintenance or documentation updates only)"
+        else
+          changelog_content=$(echo "$filtered_commits" | sed -E 's/^(feat|fix): /- **\1**: /')
+        fi
+
+        # Escape special characters for output
+        changelog_content="${changelog_content//'%'/'%25'}"
+        changelog_content="${changelog_content//$'\n'/'%0A'}"
+        echo "changelog=$changelog_content" >> $GITHUB_OUTPUT
+
+    - name: Publish GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh release create ${{ github.ref_name }} \
+          --title "${{ github.ref_name }}" \
+          --notes "${{ steps.changelog.outputs.changelog }}" \
+          ./dist/*
