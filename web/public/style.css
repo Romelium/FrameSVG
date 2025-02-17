@@ -164,14 +164,58 @@ footer a:hover {
 }
 
 @media (prefers-color-scheme: dark) {
-    html,
-    img,
-    video,
-    iframe {
-        filter: invert(1);
-    }
 
     body {
-        background-color: white;
+        background-color: #121212;
+        color: #eee;
+    }
+
+    .container {
+        background-color: #1e1e1e;
+        box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    h1, h2 {
+        color: #eee;
+    }
+
+    input[type="file"],
+    button,
+    select,
+    input[type="number"] {
+        background-color: #333;
+        color: #fff;
+        border-color: #555;
+    }
+
+    button {
+         background-color: #4CAF50;
+    }
+
+    button:hover{
+        background-color: #367C39;
+    }
+
+    #status {
+        color: #ddd;
+    }
+
+    #preview img {
+        border-color: #666;
+    }
+
+    #downloadLink {
+        background-color: #2196F3;
+    }
+    #downloadLink:hover{
+        background-color: #0d8aee;
+    }
+
+    footer {
+      border-color: #555;
+      color: #eee
+    }
+    footer a {
+        color:#64b5f6
     }
 }

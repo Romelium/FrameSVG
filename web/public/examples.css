@@ -47,6 +47,16 @@ h2 {
 }
 
 @media (prefers-color-scheme: dark) {
+    .example img {
+        border-color: #666;
+    }
+    .example p {
+        color: #ddd;
+    }
+
+    .example p span {
+        color: #ccc;
+    }
     .binary-img {
         background-color: white;
     }
