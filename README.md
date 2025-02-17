@@ -21,7 +21,6 @@
 
 You can try it now at [framesvg.romelium.cc](https://framesvg.romelium.cc)
 
-
 <br clear="both"/>
 
 ## Why Use framesvg?
@@ -250,6 +249,7 @@ npm install -g vercel
 ```
 
 ### Running Locally
+
 ```bash
 vercel dev
 ```
