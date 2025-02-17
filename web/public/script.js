@@ -43,13 +43,21 @@ document.getElementById('convertButton').addEventListener('click', async () => {
             path_precision: document.getElementById('path_precision').value,
         };
 
+        const requestBody = JSON.stringify({ file: base64Data, params });
+        const requestSizeMB = new TextEncoder().encode(requestBody).length / (1024 * 1024);
+
+        if (requestSizeMB > 4.5) {
+            statusDiv.textContent = `Serverless function request size limit (4.5MB) exceeded. Request: ${requestSizeMB.toFixed(1)}MB. Use CLI or Python library for large input and output.`;
+            return;
+        }
+
         try {
             const response = await fetch('/api/convert', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ file: base64Data, params }),
+                body: requestBody,
             });
 
             const contentType = response.headers.get("content-type");
