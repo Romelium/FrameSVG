@@ -3,7 +3,7 @@ async function getUncompressedSize(url, element) {
     if (!fullResponse.ok) return -1;
     const blob = await fullResponse.blob();
     const uncompressedSizeInKB = (blob.size / 1024).toFixed(1);
-    element.textContent += ` | ${uncompressedSizeInKB} KB (uncompressed)`;
+    element.textContent += ` | ${uncompressedSizeInKB} KB (raw)`;
 }
 
 async function getFileSize(url, element, already_uncompressed = false) {
@@ -17,7 +17,7 @@ async function getFileSize(url, element, already_uncompressed = false) {
         const contentLength = response.headers.get('Content-Length');
         if (contentLength) {
             const sizeInKB = (parseInt(contentLength) / 1024).toFixed(1);
-            element.textContent = already_uncompressed ? `${sizeInKB} KB` : `${sizeInKB} KB (compressed)`;
+            element.textContent = already_uncompressed ? `${sizeInKB} KB` : `${sizeInKB} KB (comp)`;
         }
 
         if (!already_uncompressed) getUncompressedSize(url, element);
