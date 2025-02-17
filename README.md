@@ -28,9 +28,10 @@ You can try it now at [framesvg.romelium.cc](https://framesvg.romelium.cc)
 * **True Vector Output:**  Unlike simply embedding a GIF within an SVG, `framesvg` creates a true vector animation.  This means:
   * **Scalability:**  The SVG can be resized to any dimensions without losing quality.
   * **Smaller File Size (Potentially):**  For many GIFs, the resulting SVG will be smaller, especially for graphics with large areas of solid color or simple shapes.  Complex, photographic GIFs may be larger, however.
-* **Automatic Playback:** The generated SVGs are designed to play automatically in any environment that supports SVG animations (web browsers, github, many image viewers, etc.).
+* **Automatic Playback:** The generated SVGs are designed to play automatically in any environment that supports SVG animations (web browsers, GitHub, many image viewers, etc.).
 * **Easy to Use:**  Simple command-line interface and a clean Python API.
 * **Customizable:**  Control the frame rate and fine-tune the VTracer conversion process for optimal results.
+* **Network Compression:**  SVGs are text-based and highly compressible. Web servers typically use gzip or Brotli compression, *significantly* reducing the actual transfer size of SVG files compared to GIFs (which are already compressed and don't utilize this). This leads to much faster loading times than GIFs. You can see it [here](https://framesvg.romelium.cc/examples.html).
 
 ## Examples
 
@@ -131,7 +132,7 @@ framesvg input.gif [output.svg] [options]
 * **`-f`, `--fps <value>`:**  Sets the frames per second (FPS) for the animation.  (Default: 10).  Lower values can reduce file size.
 * **`-l`, `--log-level <level>`:**  Sets the logging level.  (Default: INFO).  Choices: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`, `NONE`.  `DEBUG` provides detailed output for troubleshooting.
 
-* **VTracer Options:**  These options control the raster-to-vector conversion process performed by VTracer.  Refer to the [VTracer Documentation](https://www.visioncortex.org/vtracer-docs) and [Online Demo](https://www.visioncortex.org/vtracer/) for detailed explanations.
+* **VTracer Options:**  These options control the raster-to-vector conversion process performed by VTracer.  Refer to the [VTracer Documentation](https://www.visioncortex.org/vtracer-docs/) and [Online Demo](https://www.visioncortex.org/vtracer/) for detailed explanations.
 
   * `-c`, `--colormode <mode>`:  Color mode. (Default: `color`).  Choices: `color`, `binary`.
   * `-i`, `--hierarchical <mode>`:  Hierarchy mode. (Default: `stacked`). Choices: `stacked`, `cutout`.
