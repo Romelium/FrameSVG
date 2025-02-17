@@ -31,7 +31,7 @@
     font-style: normal;
     color: #595959;
     display: inline;
-    white-space: nowrap;
+    word-wrap: break-word;
 }
 
 h2 {
