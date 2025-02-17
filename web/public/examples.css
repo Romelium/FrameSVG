@@ -1,0 +1,47 @@
+.example-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.example {
+    text-align: center;
+    width: 48%;
+    min-width: 150px;
+}
+
+.example img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.example p {
+    margin-top: 5px;
+    font-style: italic;
+    color: #555;
+    word-wrap: break-word;
+}
+
+.example p span {
+    font-style: normal;
+    color: #777;
+    display: inline;
+    white-space: nowrap;
+}
+
+h2 {
+    clear: both;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 480px) {
+    .example {
+        min-width: 120px;
+    }
+}

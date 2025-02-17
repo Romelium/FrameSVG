@@ -34,6 +34,8 @@ You can try it now at [framesvg.romelium.cc](https://framesvg.romelium.cc)
 
 ## Examples
 
+There is a dedicated and more better example page [here](https://framesvg.romelium.cc/examples.html)
+
 The following examples demonstrate the conversion of GIFs (left) to SVGs (right) using `framesvg`.
 
 <p align="center">
