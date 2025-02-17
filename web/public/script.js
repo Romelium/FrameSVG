@@ -52,25 +52,34 @@ document.getElementById('convertButton').addEventListener('click', async () => {
                 body: JSON.stringify({ file: base64Data, params }),
             });
 
-            const data = await response.json();
-
+            const contentType = response.headers.get("content-type");
             if (response.ok) {
-                statusDiv.textContent = 'Conversion successful!';
-                const blob = new Blob([data.svg], { type: 'image/svg+xml' });
-                const blobURL = URL.createObjectURL(blob);
+                if (contentType && contentType.includes("application/json")) {
+                    const data = await response.json();
+                    statusDiv.textContent = 'Conversion successful!';
+                    const blob = new Blob([data.svg], { type: 'image/svg+xml' });
+                    const blobURL = URL.createObjectURL(blob);
 
-                // Preview
-                const img = document.createElement('img');
-                img.src = blobURL;
-                previewDiv.appendChild(img);
+                    const img = document.createElement('img');
+                    img.src = blobURL;
+                    previewDiv.appendChild(img);
 
-                // Download link
-                downloadLink.href = blobURL;
-                downloadLink.download = 'animation.svg'; // Set filename
-                downloadLink.style.display = 'block';
-
+                    downloadLink.href = blobURL;
+                    downloadLink.download = 'animation.svg';
+                    downloadLink.style.display = 'block';
+                } else {
+                    statusDiv.textContent = "Unexpected response type from server.";
+                }
             } else {
-                statusDiv.textContent = `Error: ${data.error}`;
+                if (contentType && contentType.includes("application/json")) {
+                    const data = await response.json();
+                    statusDiv.textContent = `Error: ${data.error}`;
+                } else if (contentType && contentType.includes("text/plain")) {
+                    const errorText = await response.text();
+                    statusDiv.textContent = `Error: ${errorText}`;
+                } else {
+                    statusDiv.textContent = `An error occurred: ${response.status} ${response.statusText}`;
+                }
             }
         } catch (error) {
             statusDiv.textContent = `An error occurred: ${error}`;
