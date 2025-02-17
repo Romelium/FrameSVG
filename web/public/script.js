@@ -77,7 +77,24 @@ document.getElementById('convertButton').addEventListener('click', async () => {
                 } else if (contentType && contentType.includes("text/plain")) {
                     const errorText = await response.text();
                     statusDiv.textContent = `Error: ${errorText}`;
-                } else {
+                } else if (contentType && contentType.includes("text/html")) {
+                    const errorText = await response.text();
+                    let errorMessage = "";
+
+                    const explanationMatch = errorText.match(/Error code explanation: \d+ - (.*)<\/p>/);
+                    if (explanationMatch) {
+                        errorMessage = explanationMatch[1];
+                    } else {
+                        const messageMatch = errorText.match(/Message: (.*?)<\/p>/);
+                        if (messageMatch) {
+                            errorMessage = messageMatch[1];
+                        } else {
+                            errorMessage = "An HTML error occurred, but could not extract the message.";
+                        }
+                    }
+                    statusDiv.textContent = `Error: ${errorMessage}`;
+                }
+                else {
                     statusDiv.textContent = `An error occurred: ${response.status} ${response.statusText}`;
                 }
             }
