@@ -29,7 +29,7 @@
 
 .example p span {
     font-style: normal;
-    color: #777;
+    color: #595959;
     display: inline;
     white-space: nowrap;
 }
@@ -43,5 +43,11 @@ h2 {
 @media (max-width: 480px) {
     .example {
         min-width: 120px;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .binary-img {
+        background-color: white;
     }
 }

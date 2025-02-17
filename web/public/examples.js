@@ -21,7 +21,7 @@ async function getFileSize(url, element) {
 // Select all example groups
 const exampleGroups = document.querySelectorAll('.example-group');
 
-exampleGroups.forEach(group => {
+exampleGroups.forEach(async group => {
     // Within each group, find the GIF and SVG elements
     const gifExample = group.querySelector('.example:first-child');
     const svgExample = group.querySelector('.example:last-child');
