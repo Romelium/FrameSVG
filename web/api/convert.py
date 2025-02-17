@@ -116,6 +116,13 @@ class handler(BaseHTTPRequestHandler):
                 except OSError:
                     pass
 
+
+            svg_size_bytes = len(svg_content.encode('utf-8'))
+            if svg_size_bytes > 4.5 * 1024 * 1024:
+                svg_size_mb = svg_size_bytes / (1024 * 1024)
+                self.send_error(413, f"Generated SVG is too large (exceeds 4.5MB). Size: {svg_size_mb:.2f}MB")
+                return
+
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.end_headers()
