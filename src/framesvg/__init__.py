@@ -25,7 +25,8 @@ class VTracerOptions(TypedDict, total=False):
     path_precision: int | None
 
 
-DEFAULT_FPS = 10.0
+FALLBACK_FPS = 10.0
+"""Fallback FPS if GIF duration cannot be determined."""
 
 DEFAULT_VTRACER_OPTIONS: VTracerOptions = {
     "colormode": "color",
@@ -85,6 +86,7 @@ class ImageWrapper(Protocol):
     is_animated: bool
     n_frames: int
     format: str | None
+    info: dict
 
     def seek(self, frame: int) -> None: ...
     def save(self, fp, img_format) -> None: ...
@@ -131,6 +133,34 @@ def is_animated_gif(img: ImageWrapper, filepath: str) -> None:
     """Checks if the image is an animated GIF."""
     if not img.is_animated:
         raise NotAnimatedGifError(filepath)
+
+
+def _calculate_gif_average_fps(img: ImageWrapper) -> float | None:
+    """Calculates the average FPS from GIF frame durations."""
+    if not img.is_animated or img.n_frames <= 1:
+        return None  # Not animated or single frame
+
+    total_duration_ms = 0
+    valid_frames_with_duration = 0
+    try:
+        for i in range(img.n_frames):
+            img.seek(i)
+            # PIL uses 100ms default if duration is missing or 0.
+            # Use this default directly in the sum.
+            duration = img.info.get("duration", 100)
+            # Ensure duration is at least 1ms if it was 0, consistent with some viewers/browsers
+            # treating 0 as a very small delay rather than 100ms.
+            # However, for FPS calculation, using the 100ms default seems more robust.
+            total_duration_ms += duration if duration > 0 else 100
+            valid_frames_with_duration += 1
+    except EOFError:
+        logging.warning("EOFError encountered while reading GIF durations. FPS calculation might be inaccurate.")
+
+    # Avoid division by zero if somehow total_duration_ms is 0 after processing
+    if total_duration_ms <= 0:
+        return None
+
+    return valid_frames_with_duration / (total_duration_ms / 1000.0)
 
 
 def extract_svg_dimensions_from_content(svg_content: str) -> dict[str, int] | None:
@@ -222,6 +252,9 @@ def create_animated_svg_string(frames: list[str], max_dims: dict[str, int], fps:
     if not frames:
         msg = "No frames to generate SVG."
         raise ValueError(msg)
+    if fps <= 0:
+        logging.warning("FPS is non-positive (%.2f), defaulting to fallback FPS %.1f", fps, FALLBACK_FPS)
+        fps = FALLBACK_FPS
     frame_duration = 1.0 / fps
     total_duration = frame_duration * len(frames)
 
@@ -253,9 +286,9 @@ def create_animated_svg_string(frames: list[str], max_dims: dict[str, int], fps:
 def save_svg_to_file(svg_string: str, output_path: str) -> None:
     """Writes SVG string to file."""
     if os.path.isdir(output_path):
-        msg = "'%s' is a directory, not a file."
-        logging.exception(msg, output_path)
-        raise IsADirectoryError(msg, output_path)
+        msg = f"'{output_path}' is a directory, not a file."
+        logging.error(msg)
+        raise IsADirectoryError(msg)
     try:
         with open(output_path, "w", encoding="utf-8") as f:
             f.write(svg_string)
@@ -267,7 +300,7 @@ def save_svg_to_file(svg_string: str, output_path: str) -> None:
 def gif_to_animated_svg(
     gif_path: str,
     vtracer_options: VTracerOptions | None = None,
-    fps: float = DEFAULT_FPS,
+    fps: float | None = None,
     image_loader: ImageLoader | None = None,
     vtracer_instance: VTracer | None = None,
 ) -> str:
@@ -282,8 +315,18 @@ def gif_to_animated_svg(
     img = load_image_wrapper(gif_path, image_loader)
     try:
         is_animated_gif(img, gif_path)
+
+        effective_fps = fps
+        if effective_fps is None:
+            calculated_fps = _calculate_gif_average_fps(img)
+            effective_fps = calculated_fps if calculated_fps is not None else FALLBACK_FPS
+            logging.info("Using calculated average FPS: %.2f (Fallback: %.1f)", effective_fps, FALLBACK_FPS)
+        elif effective_fps <= 0:
+            logging.warning("Provided FPS is non-positive (%.2f), using fallback FPS %.1f", effective_fps, FALLBACK_FPS)
+            effective_fps = FALLBACK_FPS
+
         frames, max_dims = process_gif_frames(img, vtracer_instance, options)
-        return create_animated_svg_string(frames, max_dims, fps)
+        return create_animated_svg_string(frames, max_dims, effective_fps)
     finally:
         img.close()
 
@@ -292,7 +335,7 @@ def gif_to_animated_svg_write(
     gif_path: str,
     output_svg_path: str,
     vtracer_options: VTracerOptions | None = None,
-    fps: float = DEFAULT_FPS,
+    fps: float | None = None,
     image_loader: ImageLoader | None = None,
     vtracer_instance: VTracer | None = None,
 ) -> None:
@@ -342,8 +385,8 @@ def parse_cli_arguments(args: list[str]) -> argparse.Namespace:
         "-f",
         "--fps",
         type=validate_positive_float,
-        default=DEFAULT_FPS,
-        help=f"Frames per second (default: {DEFAULT_FPS}).",
+        default=None,  # Default is now None, handled later
+        help=f"Frames per second. (Default: Use GIF average FPS, fallback: {FALLBACK_FPS}).",
     )
     parser.add_argument(
         "-l",
@@ -402,12 +445,14 @@ def main() -> None:
             and v is not None
         }
 
-        gif_to_animated_svg_write(args.gif_path, output_path, vtracer_options, args.fps)
+        gif_to_animated_svg_write(args.gif_path, output_path, vtracer_options=vtracer_options, fps=args.fps)
         logging.info("Converted %s to %s", args.gif_path, output_path)
     except SystemExit as e:
         sys.exit(e.code)
     except FramesvgError:
-        logging.exception("An error occurred during processing.")
+        # Specific, expected errors are logged within the functions
+        # Log general message here for unexpected FramesvgError subclasses
+        logging.exception("FrameSVG processing failed. Check previous logs for details.")
         sys.exit(1)
     except Exception:
         logging.exception("An unexpected error occurred.")

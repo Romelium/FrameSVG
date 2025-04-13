@@ -129,7 +129,7 @@ framesvg input.gif [output.svg] [options]
 
 **Options:**
 
-* **`-f`, `--fps <value>`:**  Sets the frames per second (FPS) for the animation.  (Default: 10).  Lower values can reduce file size.
+* **`-f`, `--fps <value>`:**  Sets the frames per second (FPS) for the animation. (Default: Uses the average FPS calculated from the input GIF's frame durations. Falls back to 10 FPS if durations are missing or invalid).
 * **`-l`, `--log-level <level>`:**  Sets the logging level.  (Default: INFO).  Choices: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`, `NONE`.  `DEBUG` provides detailed output for troubleshooting.
 
 * **VTracer Options:**  These options control the raster-to-vector conversion process performed by VTracer.  Refer to the [VTracer Documentation](https://www.visioncortex.org/vtracer-docs/) and [Online Demo](https://www.visioncortex.org/vtracer/) for detailed explanations.
@@ -167,7 +167,7 @@ framesvg input.gif -l DEBUG
 ```python
 from framesvg import gif_to_animated_svg_write, gif_to_animated_svg
 
-# Example 1: Convert and save to a file
+# Example 1: Convert and save to a file (using GIF's average FPS)
 gif_to_animated_svg_write("input.gif", "output.svg", fps=30)
 
 # Example 2: Get the SVG as a string
@@ -189,7 +189,7 @@ gif_to_animated_svg_write("input.gif", "output_custom.svg", vtracer_options=cust
   * `gif_path` (str): Path to the input GIF file.
   * `output_svg_path` (str): Path to save the output SVG file.
   * `vtracer_options` (dict, optional):  A dictionary of VTracer options.  If `None`, uses `DEFAULT_VTRACER_OPTIONS`.
-  * `fps` (float, optional): Frames per second.  Defaults to 10.0.
+  * `fps` (float | None, optional): Frames per second. If `None` (default), calculates the average FPS from the input GIF. Falls back to 10.0 if calculation fails.
   * `image_loader` (ImageLoader, optional): Custom image loader.
   * `vtracer_instance` (VTracer, optional):  Custom VTracer instance.
   * Raises: `FileNotFoundError`, `NotAnimatedGifError`, `NoValidFramesError`, `DimensionError`, `ExtractionError`, `FramesvgError`, `IsADirectoryError`.
@@ -197,7 +197,7 @@ gif_to_animated_svg_write("input.gif", "output_custom.svg", vtracer_options=cust
 * **`gif_to_animated_svg(gif_path, vtracer_options=None, fps=10.0, image_loader=None, vtracer_instance=None)`:**
   * `gif_path` (str): Path to the input GIF file.
   * `vtracer_options` (dict, optional):  A dictionary of VTracer options.  If `None`, uses `DEFAULT_VTRACER_OPTIONS`.
-  * `fps` (float, optional): Frames per second.  Defaults to 10.0.
+  * `fps` (float | None, optional): Frames per second. If `None` (default), calculates the average FPS from the input GIF. Falls back to 10.0 if calculation fails.
   * `image_loader` (ImageLoader, optional): Custom image loader.
   * `vtracer_instance` (VTracer, optional):  Custom VTracer instance.
   * Returns: The animated SVG as a string.

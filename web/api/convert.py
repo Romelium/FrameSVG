@@ -6,6 +6,7 @@ import os
 from urllib.parse import parse_qs
 
 from framesvg import (
+    FALLBACK_FPS,
     gif_to_animated_svg,
     DEFAULT_VTRACER_OPTIONS,
     VTracerOptions,
@@ -80,12 +81,14 @@ class handler(BaseHTTPRequestHandler):
                                 return
                             vtracer_options[key] = value  # type: ignore
 
-            fps = float(params.get("fps", DEFAULT_VTRACER_OPTIONS))
+            fps: float | None = None  # Default to None (calculate from GIF)
             if "fps" in params:
                 try:
                     fps = float(params["fps"])
+                    if fps <= 0:
+                        raise ValueError("FPS must be positive")
                 except ValueError:
-                    self.send_error(400, "Invalid fps value")
+                    self.send_error(400, "Invalid or non-positive fps value")
                     return
 
             temp_gif_path = "/tmp/input.gif"
@@ -93,7 +96,10 @@ class handler(BaseHTTPRequestHandler):
                 f.write(gif_data)
 
             try:
-                svg_content = gif_to_animated_svg(temp_gif_path, vtracer_options=vtracer_options, fps=fps)
+                # Pass fps=None if not provided, otherwise pass the float value
+                svg_content = gif_to_animated_svg(
+                    temp_gif_path, vtracer_options=vtracer_options, fps=fps
+                )  # fps is either float or None here
             except NotAnimatedGifError:
                 self.send_error(400, "The provided GIF is not animated.")
                 return
