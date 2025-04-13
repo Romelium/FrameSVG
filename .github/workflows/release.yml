@@ -3,17 +3,25 @@ name: Create Release
 on:
   push:
     tags:
+      # Trigger on semantic version tags (e.g., 1.2.3, 1.2.3-rc1, 1.2.3+build4)
+      # Note: This regex is simple; more complex patterns exist for strict SemVer.
       - '[0-9]+.[0-9]+.[0-9]+*'
 
 jobs:
   create_release:
     runs-on: ubuntu-latest
+    permissions:
+      # Required to create releases and upload assets
+      contents: write
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Required to access full git history and tags
+        # Fetch all history and tags for changelog generation
+        fetch-depth: 0
 
     - name: Install Hatch
+      # Using a specific commit hash for stability
       uses: pypa/hatch@a3c83ab3d481fbc2dc91dd0088628817488dd1d5
 
     - name: Build package
@@ -22,50 +30,114 @@ jobs:
     - name: Get previous semantic version tag
       id: prev_tag
       run: |
-        git tag --sort=-v:refname > tags.txt
-        current_tag="${{ github.ref_name }}"
-        line_number=$(grep -nxF "$current_tag" tags.txt | cut -d: -f1)
-        
-        if [ "$line_number" -gt 1 ]; then
-          prev_line=$((line_number - 1))
-          prev_tag=$(sed -n "${prev_line}p" tags.txt)
-          echo "prev_tag=$prev_tag" >> $GITHUB_OUTPUT
-        else
-          echo "prev_tag=" >> $GITHUB_OUTPUT
-        fi
+        echo "Fetching tags..."
+        git fetch --tags --force # Ensure all tags are fetched
 
-    - name: Generate changelog
+        echo "Listing and sorting tags..."
+        # Sort tags semantically in descending order (newest first)
+        git tag --sort=-v:refname > tags.txt
+
+        current_tag="${{ github.ref_name }}"
+        echo "Current tag: $current_tag"
+
+        # Find the line number of the current tag in the descending list
+        line_number=$(grep -nxF "$current_tag" tags.txt | cut -d: -f1)
+
+        if [ -z "$line_number" ]; then
+          echo "Error: Current tag '$current_tag' not found in the list of tags."
+          # Optionally fail the job: exit 1
+          # For now, assume no previous tag
+          echo "prev_tag=" >> $GITHUB_OUTPUT
+        else
+          # The previous tag is on the *next* line in the descending list
+          prev_line=$((line_number + 1))
+          # Get the total number of lines (tags)
+          total_lines=$(wc -l < tags.txt)
+
+          if [ "$prev_line" -le "$total_lines" ]; then
+            # Previous tag exists, get it from the next line
+            prev_tag=$(sed -n "${prev_line}p" tags.txt)
+            echo "Previous tag found: $prev_tag"
+            echo "prev_tag=$prev_tag" >> $GITHUB_OUTPUT
+          else
+            # No previous tag found (current tag is the oldest/only semantic tag)
+            echo "No previous semantic tag found."
+            echo "prev_tag=" >> $GITHUB_OUTPUT
+          fi
+        fi
+        rm tags.txt # Clean up temporary file
+
+    - name: Generate changelog content
       id: changelog
       run: |
         current_tag="${{ github.ref_name }}"
         prev_tag="${{ steps.prev_tag.outputs.prev_tag }}"
-        
+
+        echo "Generating changelog for range: $prev_tag .. $current_tag"
+
         if [ -z "$prev_tag" ]; then
+          # No previous tag, log commits up to the current tag
           log_range="$current_tag"
+          echo "Using log range: $log_range (first release)"
+          # For the very first tag, maybe list all conventional commits?
+          # Or just state it's the first release. Let's list commits.
+          commits=$(git log --pretty=format:"%s" "$log_range")
         else
+          # Log commits between the previous tag (exclusive) and current tag (inclusive)
           log_range="$prev_tag..$current_tag"
+          echo "Using log range: $log_range"
+          commits=$(git log --pretty=format:"%s" "$log_range")
         fi
 
-        # Extract conventional commits and format as markdown
-        commits=$(git log --pretty=format:"%s" "$log_range")
-        filtered_commits=$(echo "$commits" | grep -E '^(feat|fix):' || true)
+        # Filter for conventional commits (feat, fix) and format as markdown list
+        # Use grep -E; handle case where no commits are found gracefully (|| true)
+        filtered_commits=$(echo "$commits" | grep -E '^(feat|fix)(\(.*\))?:\s' || true)
 
         if [ -z "$filtered_commits" ]; then
-          changelog_content="No notable changes (maintenance or documentation updates only)"
+          changelog_body="No notable changes (feat/fix) detected since the last release."
+          echo "No notable changes found."
         else
-          changelog_content=$(echo "$filtered_commits" | sed -E 's/^(feat|fix): /- **\1**: /')
+          echo "Found notable changes:"
+          echo "$filtered_commits" # Log the commits being included
+          # Format: Convert "feat: Description" to "- **feat**: Description"
+          changelog_body=$(echo "$filtered_commits" | sed -E 's/^(feat|fix)(\(.*\))?:\s*/- **\1**: /')
         fi
 
-        # Escape special characters for output
-        changelog_content="${changelog_content//'%'/'%25'}"
-        changelog_content="${changelog_content//$'\n'/'%0A'}"
-        echo "changelog=$changelog_content" >> $GITHUB_OUTPUT
+        # Prepare for multiline output (needed for set-output)
+        # 1. Use a delimiter unlikely to be in the changelog
+        delimiter="$(openssl rand -hex 8)"
+        # 2. Echo the variable assignment using the delimiter
+        echo "changelog<<$delimiter" >> $GITHUB_OUTPUT
+        echo "$changelog_body" >> $GITHUB_OUTPUT
+        echo "$delimiter" >> $GITHUB_OUTPUT
+        echo "Changelog content generated."
 
-    - name: Publish GitHub Release
+    - name: Create GitHub Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CURRENT_TAG: ${{ github.ref_name }}
+        # Notes are passed via environment variable for better multiline handling
+        CHANGELOG_NOTES: ${{ steps.changelog.outputs.changelog }}
       run: |
-        gh release create ${{ github.ref_name }} \
-          --title "${{ github.ref_name }}" \
-          --notes "${{ steps.changelog.outputs.changelog }}" \
-          ./dist/*
+        echo "Creating release for tag: $CURRENT_TAG"
+
+        # Check if it's a pre-release (tag contains a hyphen)
+        prerelease_flag=""
+        if [[ "$CURRENT_TAG" == *-* ]]; then
+          echo "Detected pre-release tag."
+          prerelease_flag="--prerelease"
+        fi
+
+        echo "Release Notes:"
+        echo "$CHANGELOG_NOTES"
+        echo "---"
+
+        # Create the release using GitHub CLI
+        # Pass notes via stdin for robust multiline handling
+        echo "$CHANGELOG_NOTES" | gh release create "$CURRENT_TAG" \
+          --title "$CURRENT_TAG" \
+          --notes-file - \
+          $prerelease_flag \
+          ./dist/* # Attach all build artifacts from the dist directory
+
+        echo "GitHub Release created successfully."
