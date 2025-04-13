@@ -19,9 +19,6 @@ jobs:
     - name: Build package
       run: hatch build
 
-    - name: Setup GitHub CLI
-      uses: actions/setup-gh-cli@v1
-
     - name: Get previous semantic version tag
       id: prev_tag
       run: |
