@@ -5,93 +5,135 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Convert animated GIFs to animated SVGs with framesvg, a command-line tool and Python library.  Leverages VTracer for true vector output, offering scalability and potential file size reduction.">
+        content="Convert animated GIFs to animated SVGs with framesvg. True vector output, scalable, and optimized.">
     <meta name="keywords"
-        content="FrameSVG, animated SVG, GIF to SVG, VTracer, vector graphics, animation, Python library, command-line tool, image conversion, scalability, romelium">
+        content="FrameSVG, animated SVG, GIF to SVG, VTracer, vector graphics, animation, converter">
     <meta name="author" content="Romelium">
-    <meta name="robots" content="index, follow">
-    <title>FrameSVG: Convert Animated GIFs to Animated SVGs</title>
+    <title>FrameSVG: Animated GIF to Animated SVG Converter</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="container">
-        <h1>FrameSVG: Animated GIF to Animated SVG</h1>
-        <p>Convert your animated GIFs to scalable, animated SVGs.</p>
+        <header>
+            <h1>FrameSVG</h1>
+            <p>Convert animated GIFs to scalable, animated SVGs.</p>
+        </header>
 
-        <input type="file" id="gifInput" accept="image/gif" aria-label="Gif File Input">
-        <div id="status"></div>
+        <main>
+            <div class="upload-section">
+                <div id="dropZone" class="drop-zone">
+                    <div class="drop-content">
+                        <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        <p>Drag & Drop GIF here</p>
+                        <p class="or-text">- or -</p>
+                        <button id="browseButton" class="secondary-btn">Browse Files</button>
+                    </div>
+                    <input type="file" id="gifInput" accept="image/gif" aria-label="Gif File Input" hidden>
+                </div>
+                <div id="fileInfo" class="file-info hidden">
+                    <span id="fileName"></span>
+                    <button id="removeFile" class="icon-btn" aria-label="Remove file">×</button>
+                </div>
+            </div>
 
-        <h2>Parameters</h2>
-        <div class="params-grid">
-            <div>
-                <label for="fps">FPS:</label>
-                <input type="number" id="fps" value="10" step="0.1" min="0.1">
-            </div>
-            <div>
-                <label for="colormode">Color Mode:</label>
-                <select id="colormode">
-                    <option value="color">Color</option>
-                    <option value="binary">Binary</option>
-                </select>
-            </div>
-            <div>
-                <label for="hierarchical">Hierarchy:</label>
-                <select id="hierarchical">
-                    <option value="stacked">Stacked</option>
-                    <option value="cutout">Cutout</option>
-                </select>
-            </div>
-            <div>
-                <label for="mode">Mode:</label>
-                <select id="mode">
-                    <option value="polygon">Polygon</option>
-                    <option value="spline">Spline</option>
-                    <option value="none">None</option>
-                </select>
-            </div>
-            <div>
-                <label for="filter_speckle">Filter Speckle:</label>
-                <input type="number" id="filter_speckle" value="4" min="0">
-            </div>
-            <div>
-                <label for="color_precision">Color Precision:</label>
-                <input type="number" id="color_precision" value="8" min="1">
-            </div>
-            <div>
-                <label for="layer_difference">Layer Difference:</label>
-                <input type="number" id="layer_difference" value="16" min="1">
-            </div>
-            <div>
-                <label for="corner_threshold">Corner Threshold:</label>
-                <input type="number" id="corner_threshold" value="60" min="0">
-            </div>
-            <div>
-                <label for="length_threshold">Length Threshold:</label>
-                <input type="number" id="length_threshold" value="4.0" step="0.1" min="0">
-            </div>
-            <div>
-                <label for="max_iterations">Max Iterations:</label>
-                <input type="number" id="max_iterations" value="10" min="1">
-            </div>
-            <div>
-                <label for="splice_threshold">Splice Threshold:</label>
-                <input type="number" id="splice_threshold" value="45" min="0">
-            </div>
-            <div>
-                <label for="path_precision">Path Precision:</label>
-                <input type="number" id="path_precision" value="8" min="0">
-            </div>
-        </div>
+            <div class="settings-section">
+                <div class="basic-settings">
+                    <div class="input-group">
+                        <label for="fps" title="Frames Per Second. Leave empty to calculate from GIF duration.">FPS <span class="tooltip-icon">?</span></label>
+                        <input type="number" id="fps" placeholder="Auto" step="0.1" min="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label for="colormode" title="Color: Standard. Binary: Bright areas become transparent.">Color Mode <span class="tooltip-icon">?</span></label>
+                        <select id="colormode">
+                            <option value="color">Color</option>
+                            <option value="binary">Binary</option>
+                        </select>
+                    </div>
+                </div>
 
-        <button id="convertButton">Convert</button>
-        <div id="preview"></div>
-        <a id="downloadLink" style="display: none;" aria-label="Download link of animated SVG">Download SVG</a>
+                <details class="advanced-settings">
+                    <summary>Advanced Options</summary>
+                    <div class="params-grid">
+                        <div class="input-group">
+                            <label for="filter_speckle" title="Discards small shapes. Higher values reduce file size significantly.">Filter Speckle <span class="tooltip-icon">?</span></label>
+                            <input type="number" id="filter_speckle" value="4" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="mode" title="Polygon: Sharp edges (smaller). Spline: Smooth curves.">Mode <span class="tooltip-icon">?</span></label>
+                            <select id="mode">
+                                <option value="polygon">Polygon</option>
+                                <option value="spline">Spline</option>
+                                <option value="none">None</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="hierarchical" title="Stacked: Layers stack. Cutout: Shapes don't overlap.">Hierarchy <span class="tooltip-icon">?</span></label>
+                            <select id="hierarchical">
+                                <option value="stacked">Stacked</option>
+                                <option value="cutout">Cutout</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="color_precision" title="Color quantization bits. Lower = fewer colors.">Color Precision <span class="tooltip-icon">?</span></label>
+                            <input type="number" id="color_precision" value="8" min="1">
+                        </div>
+                        <div class="input-group">
+                            <label for="layer_difference" title="Gradient threshold. Higher = fewer layers.">Layer Diff <span class="tooltip-icon">?</span></label>
+                            <input type="number" id="layer_difference" value="16" min="1">
+                        </div>
+                        <div class="input-group">
+                            <label for="corner_threshold" title="Minimum angle to be considered a corner.">Corner Thresh <span class="tooltip-icon">?</span></label>
+                            <input type="number" id="corner_threshold" value="60" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="length_threshold" title="Shortest path length to keep.">Length Thresh <span class="tooltip-icon">?</span></label>
+                            <input type="number" id="length_threshold" value="4.0" step="0.1" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="max_iterations" title="Curve fitting iterations.">Max Iterations <span class="tooltip-icon">?</span></label>
+                            <input type="number" id="max_iterations" value="10" min="1">
+                        </div>
+                        <div class="input-group">
+                            <label for="splice_threshold" title="Angle threshold for splitting splines.">Splice Thresh <span class="tooltip-icon">?</span></label>
+                            <input type="number" id="splice_threshold" value="45" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="path_precision" title="Decimal places for coordinates.">Path Precision <span class="tooltip-icon">?</span></label>
+                            <input type="number" id="path_precision" value="8" min="0">
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <button id="convertButton" class="primary-btn" disabled>Convert</button>
+            
+            <div id="status" class="status-container"></div>
+
+            <div id="previewArea" class="preview-area hidden">
+                <div class="preview-card">
+                    <h3>Original GIF</h3>
+                    <div class="img-wrapper">
+                        <img id="gifPreviewImg" alt="Original GIF Preview">
+                    </div>
+                    <p id="gifMeta" class="meta-text"></p>
+                </div>
+                <div class="preview-card">
+                    <h3>Converted SVG</h3>
+                    <div class="img-wrapper" id="svgWrapper">
+                        <!-- SVG injected here -->
+                    </div>
+                    <p id="svgMeta" class="meta-text"></p>
+                </div>
+            </div>
+            
+            <a id="downloadLink" class="download-btn hidden" aria-label="Download SVG">Download SVG</a>
+
+        </main>
 
         <footer>
-            <p><a href="examples.html" aria-label="View Examples">View Examples</a></p>
-            <p>Find details, examples, and source code on <a href="https://github.com/Romelium/FrameSVG" target="_blank"
-                    rel="noopener norrer" aria-label="View GitHub of FrameSVG">GitHub</a>.</p>
+            <p><a href="examples.html">View Examples</a></p>
+            <p>Source on <a href="https://github.com/Romelium/FrameSVG" target="_blank" rel="noopener noreferrer">GitHub</a></p>
         </footer>
     </div>
     <script src="script.js"></script>
