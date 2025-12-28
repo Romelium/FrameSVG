@@ -62,6 +62,12 @@ exclude = [
     "/.gitignore",
 ]
 
+[tool.hatch.envs.hatch-test]
+dependencies = [
+  "coverage[toml]>=6.5",
+  "pytest",
+]
+
 [[tool.hatch.envs.hatch-test.matrix]]
 python = ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
