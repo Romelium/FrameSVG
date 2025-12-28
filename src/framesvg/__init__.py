@@ -8,8 +8,8 @@ import re
 import sys
 from typing import Literal, Protocol, TypedDict
 
-from PIL import Image
 import vtracer
+from PIL import Image
 
 
 class VTracerOptions(TypedDict, total=False):
