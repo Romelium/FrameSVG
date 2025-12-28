@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="480" height="220" viewBox="0 0 480 220"><title>Generated Animation</title>
-<desc>4 frames at 7.690000 FPS</desc>
+<desc>4 frames, 0.520s duration</desc>
 <g id="animationGroup">
 <g id="frame0" opacity="0">
 
@@ -22,7 +22,7 @@
 <path d="M0,0 L2,4 L1,8 L-1,8 L-1,1 Z " fill="#FE5E2C" transform="translate(240,143)"/>
 <path d="M0,0 L6,0 L6,2 L2,3 L0,6 Z " fill="#FE5F2D" transform="translate(355,91)"/>
 
-<animate attributeName="opacity" dur="0.520156s" values="0;1;0" keyTimes="0;0.000000;0.250000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="0.520000s" values="0;1;0" keyTimes="0;0.000000;0.250000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame1" opacity="0">
 
@@ -34,7 +34,7 @@
 <path d="M0,0 L2,3 L2,8 L3,10 L1,13 L-1,4 Z " fill="#FD5D2A" transform="translate(12,108)"/>
 <path d="M0,0 L5,0 L1,2 L-4,6 L-3,2 Z " fill="#FD5F2C" transform="translate(418,32)"/>
 
-<animate attributeName="opacity" dur="0.520156s" values="0;1;0" keyTimes="0;0.250000;0.500000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="0.520000s" values="0;1;0" keyTimes="0;0.250000;0.500000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame2" opacity="0">
 
@@ -50,7 +50,7 @@
 <path d="M0,0 L6,1 L6,2 L0,3 L-8,2 L-8,1 Z " fill="#FD6B3C" transform="translate(373,64)"/>
 <path d="M0,0 L7,1 L3,4 L-2,2 Z " fill="#FD612F" transform="translate(417,36)"/>
 
-<animate attributeName="opacity" dur="0.520156s" values="0;1;0" keyTimes="0;0.500000;0.750000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="0.520000s" values="0;1;0" keyTimes="0;0.500000;0.750000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame3" opacity="0">
 
@@ -64,7 +64,7 @@
 <path d="M0,0 L2,0 L0,6 L-1,8 L-3,8 L-3,3 Z " fill="#FD5F2D" transform="translate(348,66)"/>
 <path d="M0,0 L7,0 L10,3 L7,3 L0,1 Z " fill="#FD5F2D" transform="translate(396,78)"/>
 
-<animate attributeName="opacity" dur="0.520156s" values="0;1;0" keyTimes="0;0.750000;1.000000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="0.520000s" values="0;1;0" keyTimes="0;0.750000;1.000000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 </g>
 </svg>

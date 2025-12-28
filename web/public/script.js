@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileNameSpan = document.getElementById('fileName');
     const removeFileBtn = document.getElementById('removeFile');
     const convertBtn = document.getElementById('convertButton');
-    const statusDiv = document.getElementById('status');
+    const statusText = document.getElementById('statusText');
+    const loadingSpinner = document.getElementById('loadingSpinner');
     const previewArea = document.getElementById('previewArea');
     const gifPreviewImg = document.getElementById('gifPreviewImg');
     const gifMeta = document.getElementById('gifMeta');
@@ -42,7 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     fileInput.addEventListener('change', handleFiles);
-    removeFileBtn.addEventListener('click', clearFile);
+    removeFileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        clearFile();
+    });
 
     function handleDrop(e) {
         const dt = e.dataTransfer;
@@ -59,31 +63,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleFileSelection(file) {
-        if (file.type !== 'image/gif') {
-            statusDiv.textContent = 'Error: Please select a valid GIF file.';
-            statusDiv.style.color = 'var(--error-color)';
+        // Check mime type or extension
+        if (file.type !== 'image/gif' && !file.name.toLowerCase().endsWith('.gif')) {
+            showStatus('Error: Please select a valid GIF file.', 'error');
             return;
         }
 
         selectedFile = file;
         fileNameSpan.textContent = file.name;
-        
+
         // UI Updates
         dropZone.classList.add('hidden');
         fileInfo.classList.remove('hidden');
         convertBtn.disabled = false;
-        statusDiv.textContent = '';
-        
+        showStatus('');
+
         // Preview GIF
         const reader = new FileReader();
         reader.onload = (e) => {
             gifPreviewImg.src = e.target.result;
             previewArea.classList.remove('hidden');
             // Reset SVG part
-            svgWrapper.innerHTML = '';
+            svgWrapper.innerHTML = '<div style="color: var(--text-secondary); font-style: italic;">Waiting for conversion...</div>';
             svgMeta.textContent = '';
             downloadLink.classList.add('hidden');
-            
+
             // Calculate size
             const sizeKB = (file.size / 1024).toFixed(1);
             gifMeta.textContent = `Size: ${sizeKB} KB`;
@@ -98,18 +102,35 @@ document.addEventListener('DOMContentLoaded', () => {
         fileInfo.classList.add('hidden');
         convertBtn.disabled = true;
         previewArea.classList.add('hidden');
-        statusDiv.textContent = '';
+        showStatus('');
         downloadLink.classList.add('hidden');
+    }
+
+    function showStatus(message, type = 'normal') {
+        statusText.textContent = message;
+        if (type === 'error') {
+            statusText.style.color = 'var(--error-color)';
+            loadingSpinner.classList.add('hidden');
+        } else if (type === 'success') {
+            statusText.style.color = 'var(--success-color)';
+            loadingSpinner.classList.add('hidden');
+        } else if (type === 'loading') {
+            statusText.style.color = 'var(--text-color)';
+            loadingSpinner.classList.remove('hidden');
+        } else {
+            statusText.style.color = 'var(--text-color)';
+            loadingSpinner.classList.add('hidden');
+        }
     }
 
     // Conversion Logic
     convertBtn.addEventListener('click', async () => {
         if (!selectedFile) return;
 
-        statusDiv.textContent = 'Converting... This may take a moment.';
-        statusDiv.style.color = 'var(--text-color)';
+        showStatus('Converting... This may take a moment.', 'loading');
         convertBtn.disabled = true;
-        svgWrapper.innerHTML = '<div style="padding:20px;">Processing...</div>';
+        svgWrapper.innerHTML = '<div style="padding:20px; color: var(--text-secondary);">Processing...</div>';
+        downloadLink.classList.add('hidden');
 
         const reader = new FileReader();
         reader.readAsDataURL(selectedFile);
@@ -134,11 +155,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const requestBody = JSON.stringify({ file: base64Data, params });
-            
+
             // Check size limit (approximate)
             if (requestBody.length > 4.5 * 1024 * 1024) {
-                statusDiv.textContent = 'Error: File too large for web demo (Limit 4.5MB). Use CLI tool.';
-                statusDiv.style.color = 'var(--error-color)';
+                showStatus('Error: File too large for web demo (Limit 4.5MB). Use CLI tool.', 'error');
                 convertBtn.disabled = false;
                 svgWrapper.innerHTML = '';
                 return;
@@ -152,40 +172,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 const contentType = response.headers.get("content-type");
-                
+
                 if (response.ok && contentType && contentType.includes("application/json")) {
                     const data = await response.json();
-                    
+
                     // Display SVG
                     svgWrapper.innerHTML = data.svg;
-                    
+
                     // Create Blob for download
                     const blob = new Blob([data.svg], { type: 'image/svg+xml' });
                     const blobURL = URL.createObjectURL(blob);
                     const sizeKB = (blob.size / 1024).toFixed(1);
-                    
+
                     svgMeta.textContent = `Size: ${sizeKB} KB`;
                     downloadLink.href = blobURL;
                     downloadLink.download = selectedFile.name.replace(/\.gif$/i, '.svg');
                     downloadLink.classList.remove('hidden');
-                    
-                    statusDiv.textContent = 'Conversion Successful!';
-                    statusDiv.style.color = 'var(--success-color)';
+
+                    showStatus('Conversion Successful!', 'success');
                 } else {
                     let errorMsg = 'Unknown error occurred.';
                     if (contentType && contentType.includes("application/json")) {
                         const errData = await response.json();
                         errorMsg = errData.error || errorMsg;
                     } else {
-                        errorMsg = await response.text();
+                        const text = await response.text();
+                        if (text.trim().startsWith('<')) {
+                            console.error("Server returned HTML:", text);
+                            errorMsg = `Server Error (${response.status})`;
+                        } else {
+                            errorMsg = text;
+                        }
                     }
                     throw new Error(errorMsg);
                 }
             } catch (error) {
                 console.error(error);
-                statusDiv.textContent = `Error: ${error.message}`;
-                statusDiv.style.color = 'var(--error-color)';
-                svgWrapper.innerHTML = '';
+                showStatus(`Error: ${error.message}`, 'error');
+                svgWrapper.innerHTML = '<div style="color: var(--error-color);">Conversion failed</div>';
             } finally {
                 convertBtn.disabled = false;
             }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="333" height="243" viewBox="0 0 333 243"><title>Generated Animation</title>
-<desc>25 frames at 16.666000 FPS</desc>
+<desc>25 frames, 1.500s duration</desc>
 <g id="animationGroup">
 <g id="frame0" opacity="0">
 
@@ -179,7 +179,7 @@
 <path d="M0,0 L2,2 L2,7 L-4,3 L-2,2 L0,3 Z " fill="#998D64" transform="translate(175,76)"/>
 <path d="M0,0 L2,0 L2,9 L-1,6 Z " fill="#CCB04A" transform="translate(177,72)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.000000;0.040000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.000000;0.040000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame1" opacity="0">
 
@@ -373,7 +373,7 @@
 <path d="M0,0 L2,4 L4,5 L4,7 L0,7 L-1,3 Z " fill="#30130A" transform="translate(148,58)"/>
 <path d="M0,0 L2,1 L1,6 L2,8 L-2,6 L-1,1 Z " fill="#C2B25A" transform="translate(179,51)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.040000;0.080000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.040000;0.080000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame2" opacity="0">
 
@@ -564,7 +564,7 @@
 <path d="M0,0 L7,2 L6,4 L0,3 L-2,1 Z " fill="#A0841B" transform="translate(155,126)"/>
 <path d="M0,0 L3,3 L1,8 L0,8 L-1,1 Z " fill="#B6D9D3" transform="translate(175,93)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.080000;0.120000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.080000;0.120000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame3" opacity="0">
 
@@ -773,7 +773,7 @@
 <path d="M0,0 L4,1 L7,2 L7,5 L3,4 L3,2 L0,1 Z " fill="#4F3F77" transform="translate(277,121)"/>
 <path d="M0,0 L3,0 L3,2 L6,2 L6,4 L1,3 L-2,1 Z " fill="#DEB71E" transform="translate(153,52)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.120000;0.160000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.120000;0.160000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame4" opacity="0">
 
@@ -960,7 +960,7 @@
 <path d="M0,0 L7,2 L7,4 L1,4 Z " fill="#BFC5B6" transform="translate(219,90)"/>
 <path d="M0,0 L5,2 L8,5 L5,5 L0,2 Z " fill="#716864" transform="translate(170,78)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.160000;0.200000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.160000;0.200000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame5" opacity="0">
 
@@ -1160,7 +1160,7 @@
 <path d="M0,0 L6,1 L4,2 L5,5 L3,6 L2,2 L0,2 Z " fill="#D4B440" transform="translate(141,66)"/>
 <path d="M0,0 L3,0 L3,6 L0,5 Z " fill="#C3A86F" transform="translate(164,59)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.200000;0.240000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.200000;0.240000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame6" opacity="0">
 
@@ -1372,7 +1372,7 @@
 <path d="M0,0 L2,0 L2,6 L-4,4 L0,3 Z " fill="#A48727" transform="translate(145,94)"/>
 <path d="M0,0 L7,1 L9,2 L9,4 L5,3 L0,1 Z " fill="#AA9C8A" transform="translate(214,78)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.240000;0.280000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.240000;0.280000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame7" opacity="0">
 
@@ -1569,7 +1569,7 @@
 <path d="M0,0 L4,1 L2,3 L1,6 L-2,5 L-2,2 L0,2 Z " fill="#E0BA1F" transform="translate(117,80)"/>
 <path d="M0,0 L3,4 L4,8 L2,8 L2,6 L0,6 L-1,1 Z " fill="#A69746" transform="translate(213,72)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.280000;0.320000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.280000;0.320000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame8" opacity="0">
 
@@ -1759,7 +1759,7 @@
 <path d="M0,0 L4,1 L1,2 L1,4 L-2,5 L-4,3 L0,2 Z " fill="#A28009" transform="translate(106,74)"/>
 <path d="M0,0 L2,4 L2,6 L-4,6 Z " fill="#78592E" transform="translate(175,62)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.320000;0.360000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.320000;0.360000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame9" opacity="0">
 
@@ -1954,7 +1954,7 @@
 <path d="M0,0 L2,0 L2,2 L4,2 L4,6 L1,5 Z " fill="#6660C7" transform="translate(281,68)"/>
 <path d="M0,0 L7,1 L8,4 L0,2 Z " fill="#D9BB50" transform="translate(205,50)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.360000;0.400000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.360000;0.400000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame10" opacity="0">
 
@@ -2153,7 +2153,7 @@
 <path d="M0,0 L4,2 L6,6 L4,6 L4,4 L0,3 Z " fill="#B0B1B6" transform="translate(209,56)"/>
 <path d="M0,0 L2,0 L4,7 L0,6 L-1,1 Z " fill="#5C58D0" transform="translate(215,56)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.400000;0.440000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.400000;0.440000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame11" opacity="0">
 
@@ -2398,7 +2398,7 @@
 <path d="M0,0 L2,0 L2,4 L4,4 L4,8 L2,8 L0,3 Z " fill="#624951" transform="translate(243,67)"/>
 <path d="M0,0 L3,0 L3,3 L1,4 L1,7 L-1,7 L-1,1 Z " fill="#90B3A2" transform="translate(206,63)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.440000;0.480000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.440000;0.480000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame12" opacity="0">
 
@@ -2586,7 +2586,7 @@
 <path d="M0,0 L8,0 L10,2 L8,2 L8,5 L6,5 L6,2 L0,1 Z " fill="#A3CCBF" transform="translate(189,77)"/>
 <path d="M0,0 L1,4 L1,7 L-1,7 L-2,9 L-1,1 Z " fill="#C4D7D1" transform="translate(168,70)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.480000;0.520000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.480000;0.520000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame13" opacity="0">
 
@@ -2757,7 +2757,7 @@
 <path d="M0,0 L4,0 L4,2 L2,2 L3,5 L0,6 Z " fill="#3E2339" transform="translate(209,58)"/>
 <path d="M0,0 L4,1 L1,2 L1,4 L-4,5 Z " fill="#6260A6" transform="translate(168,34)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.520000;0.560000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.520000;0.560000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame14" opacity="0">
 
@@ -2942,7 +2942,7 @@
 <path d="M0,0 L4,0 L3,4 L-3,4 L-2,2 L0,2 Z " fill="#B0E0D5" transform="translate(199,86)"/>
 <path d="M0,0 L3,1 L1,1 L1,4 L-3,6 L-2,1 Z " fill="#C2AF68" transform="translate(136,64)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.560000;0.600000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.560000;0.600000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame15" opacity="0">
 
@@ -3160,7 +3160,7 @@
 <path d="M0,0 L5,4 L6,8 L2,6 Z " fill="#BBC5B9" transform="translate(189,50)"/>
 <path d="M0,0 L6,0 L2,2 L-3,4 L-5,2 Z " fill="#4744C2" transform="translate(148,41)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.600000;0.640000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.600000;0.640000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame16" opacity="0">
 
@@ -3392,7 +3392,7 @@
 <path d="M0,0 L2,0 L3,5 L-2,6 L-2,4 L0,4 Z " fill="#C3DECA" transform="translate(171,66)"/>
 <path d="M0,0 L4,3 L-1,8 Z " fill="#9EAACA" transform="translate(115,67)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.640000;0.680000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.640000;0.680000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame17" opacity="0">
 
@@ -3604,7 +3604,7 @@
 <path d="M0,0 L3,0 L3,2 L0,2 L0,6 L-2,6 L-2,4 L-4,3 Z " fill="#94A2B8" transform="translate(149,39)"/>
 <path d="M0,0 L6,0 L7,3 L2,3 Z " fill="#C8DFDB" transform="translate(169,40)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.680000;0.720000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.680000;0.720000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame18" opacity="0">
 
@@ -3816,7 +3816,7 @@
 <path d="M0,0 L2,0 L5,6 L5,8 L2,7 L0,3 Z " fill="#68716D" transform="translate(178,77)"/>
 <path d="M0,0 L2,4 L3,7 L-2,7 L-3,5 L0,5 Z " fill="#8F6915" transform="translate(146,59)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.720000;0.760000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.720000;0.760000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame19" opacity="0">
 
@@ -4038,7 +4038,7 @@
 <path d="M0,0 L6,3 L3,6 L0,3 Z " fill="#AED6D7" transform="translate(177,77)"/>
 <path d="M0,0 L1,4 L-1,7 L-3,7 L-2,2 Z " fill="#D1B249" transform="translate(144,32)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.760000;0.800000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.760000;0.800000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame20" opacity="0">
 
@@ -4249,7 +4249,7 @@
 <path d="M0,0 L1,2 L3,2 L3,4 L6,5 L3,6 L0,4 Z M-1,4 Z M-2,5 Z " fill="#ACD8DA" transform="translate(162,78)"/>
 <path d="M0,0 L2,0 L2,6 L-1,6 L-1,1 Z " fill="#D2B439" transform="translate(121,54)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.800000;0.840000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.800000;0.840000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame21" opacity="0">
 
@@ -4449,7 +4449,7 @@
 <path d="M0,0 L6,1 L6,3 L-1,4 Z " fill="#AEDACD" transform="translate(180,127)"/>
 <path d="M0,0 L1,0 L1,5 L-3,6 L-5,7 L-3,3 Z " fill="#AA850F" transform="translate(220,100)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.840000;0.880000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.840000;0.880000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame22" opacity="0">
 
@@ -4648,7 +4648,7 @@
 <path d="M0,0 L2,0 L2,6 L0,6 L-1,8 Z " fill="#5F57C1" transform="translate(33,95)"/>
 <path d="M0,0 L4,1 L4,2 L-2,4 L-6,3 Z " fill="#D7B95A" transform="translate(170,62)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.880000;0.920000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.880000;0.920000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame23" opacity="0">
 
@@ -4849,7 +4849,7 @@
 <path d="M0,0 L4,2 L6,5 L3,6 L0,2 Z " fill="#BA9313" transform="translate(179,78)"/>
 <path d="M0,0 L6,2 L6,3 L-2,3 L-2,1 Z " fill="#CDD6A9" transform="translate(243,77)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.920000;0.960000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.920000;0.960000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame24" opacity="0">
 
@@ -5036,7 +5036,7 @@
 <path d="M0,0 L3,0 L5,4 L4,7 L2,3 L0,3 Z " fill="#482B48" transform="translate(93,95)"/>
 <path d="M0,0 L4,1 L4,5 L6,6 L2,5 L0,3 Z " fill="#53529E" transform="translate(135,88)"/>
 
-<animate attributeName="opacity" dur="1.500060s" values="0;1;0" keyTimes="0;0.960000;1.000000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="1.500000s" values="0;1;0" keyTimes="0;0.960000;1.000000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 </g>
 </svg>

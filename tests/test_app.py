@@ -15,7 +15,6 @@ from framesvg import (
     NotAnimatedGifError,
     NoValidFramesError,
     VTracerOptions,
-    _calculate_gif_average_fps,
     create_animated_svg_string,
     extract_inner_svg_content_from_full_svg,
     extract_svg_dimensions_from_content,
@@ -356,13 +355,14 @@ def test_extract_inner_svg_content_from_full_svg_variations(full_svg_input, expe
 
 
 def test_process_gif_frame_success(mock_image_instance, mock_vtracer_instance_for_tests):
-    inner_svg, dims = process_gif_frame(
+    inner_svg, dims, duration = process_gif_frame(
         mock_image_instance, 0, mock_vtracer_instance_for_tests, DEFAULT_VTRACER_OPTIONS
     )
     assert isinstance(inner_svg, str)
     assert isinstance(dims, dict)
     assert "width" in dims
     assert "height" in dims
+    assert isinstance(duration, int)
 
 
 def test_process_gif_frame_vtracer_error(mock_image_instance, mock_vtracer_instance_for_tests):
@@ -374,7 +374,7 @@ def test_process_gif_frame_vtracer_error(mock_image_instance, mock_vtracer_insta
 @pytest.mark.parametrize("selected_frame", [-1, 0, 1, 2])
 def test_process_gif_frame_number_variations(mock_image_instance, mock_vtracer_instance_for_tests, selected_frame):
     if 0 <= selected_frame < mock_image_instance.n_frames:
-        inner_svg, dims = process_gif_frame(
+        inner_svg, dims, duration = process_gif_frame(
             mock_image_instance,
             selected_frame,
             mock_vtracer_instance_for_tests,
@@ -382,6 +382,7 @@ def test_process_gif_frame_number_variations(mock_image_instance, mock_vtracer_i
         )
         assert isinstance(inner_svg, str)
         assert isinstance(dims, dict)
+        assert isinstance(duration, int)
     else:
         with pytest.raises(FrameOutOfRangeError):
             process_gif_frame(
@@ -411,10 +412,11 @@ def test_create_animated_svg_string_comprehensive_tests(sample_frames):
         {"width": 200, "height": 150},
         {"width": 1920, "height": 1080},
     ]
+    dummy_durations = [100] * len(sample_frames)
 
     for test_fps in fps_list:
         for test_dims in dimension_list:
-            svg_string_result = create_animated_svg_string(sample_frames, test_dims, test_fps)
+            svg_string_result = create_animated_svg_string(sample_frames, dummy_durations, test_dims, test_fps)
 
             assert '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' in svg_string_result
 
@@ -423,7 +425,7 @@ def test_create_animated_svg_string_comprehensive_tests(sample_frames):
             assert f'viewBox="0 0 {test_dims["width"]} {test_dims["height"]}"' in svg_string_result
 
             expected_duration = len(sample_frames) / test_fps
-            assert f'dur="{expected_duration:.6f}s"' in svg_string_result
+            assert f"<desc>{len(sample_frames)} frames, {expected_duration:.3f}s duration</desc>" in svg_string_result
 
             for frame_content in sample_frames:
                 assert frame_content in svg_string_result
@@ -431,27 +433,33 @@ def test_create_animated_svg_string_comprehensive_tests(sample_frames):
 
 def test_create_animated_svg_string_edge_cases_tests():
     test_dims = {"width": 100, "height": 100}
+    dummy_durations = [100]
 
     with pytest.raises(ValueError, match="No frames to generate SVG."):  # type: ignore
-        create_animated_svg_string([], test_dims, FALLBACK_FPS)
+        create_animated_svg_string([], [], test_dims, FALLBACK_FPS)
 
-    single_frame_svg = create_animated_svg_string(["<path/>"], test_dims, FALLBACK_FPS)
+    single_frame_svg = create_animated_svg_string(["<path/>"], dummy_durations, test_dims, FALLBACK_FPS)
     assert "<path/>" in single_frame_svg
     assert 'repeatCount="indefinite"' in single_frame_svg
 
-    high_fps_svg = create_animated_svg_string(["<path/>"], test_dims, 1000.0)
+    high_fps_svg = create_animated_svg_string(["<path/>"], dummy_durations, test_dims, 1000.0)
     assert 'dur="0.001000s"' in high_fps_svg
 
-    low_fps_svg = create_animated_svg_string(["<path/>"], test_dims, 0.1)
+    low_fps_svg = create_animated_svg_string(["<path/>"], dummy_durations, test_dims, 0.1)
     assert 'dur="10.000000s"' in low_fps_svg
 
 
 def test_process_gif_frames_integration_tests(mock_image_instance, mock_vtracer_instance_for_tests):
-    frames, max_dims = process_gif_frames(mock_image_instance, mock_vtracer_instance_for_tests, DEFAULT_VTRACER_OPTIONS)
+    frames, durations, max_dims = process_gif_frames(
+        mock_image_instance, mock_vtracer_instance_for_tests, DEFAULT_VTRACER_OPTIONS
+    )
     assert isinstance(frames, list)
+    assert isinstance(durations, list)
     assert isinstance(max_dims, dict)
     assert len(frames) > 0
+    assert len(durations) == len(frames)
     assert all(isinstance(frame, str) for frame in frames)
+    assert all(isinstance(d, int) for d in durations)
     assert max_dims["width"] > 0
     assert max_dims["height"] > 0
 
@@ -466,8 +474,9 @@ def test_process_gif_frames_integration_tests(mock_image_instance, mock_vtracer_
         process_gif_frames(mock_image_instance, mock_vtracer, DEFAULT_VTRACER_OPTIONS)
 
     mock_vtracer = create_mock_vtracer(return_svg=['<svg width="10" height="10"><path/></svg>', "<svg></svg>"])
-    frames, max_dims = process_gif_frames(mock_image_instance, mock_vtracer, DEFAULT_VTRACER_OPTIONS)
+    frames, durations, max_dims = process_gif_frames(mock_image_instance, mock_vtracer, DEFAULT_VTRACER_OPTIONS)
     assert len(frames) == 1
+    assert len(durations) == 1
 
 
 def test_gif_to_animated_svg_comprehensive(
@@ -510,7 +519,11 @@ def test_gif_to_animated_svg_comprehensive(
                     assert svg_string_explicit_fps.startswith("<?xml")
                     assert "<svg" in svg_string_explicit_fps
                     assert "</svg>" in svg_string_explicit_fps
-                    assert f"<desc>{num_frames} frames at {fps:.6f} FPS</desc>" in svg_string_explicit_fps
+                    expected_duration = num_frames / fps
+                    assert (
+                        f"<desc>{num_frames} frames, {expected_duration:.3f}s duration</desc>"
+                        in svg_string_explicit_fps
+                    )
                     assert 'repeatCount="indefinite"' in svg_string_explicit_fps
                     mock_image_loader_instance.open.assert_called_with(gif_path)
                     mock_image.close.assert_called_once()  # Ensure image is closed
@@ -531,21 +544,18 @@ def test_gif_to_animated_svg_comprehensive(
                             vtracer_instance=mock_vtracer_instance_for_tests,
                         )
 
-                    # Calculate expected average FPS using the same logic as the function
-                    total_duration_ms_calc = sum(d if d > 0 else 100 for d in test_durations)
-                    valid_frames_calc = len(test_durations)
-                    expected_fps = (
-                        (valid_frames_calc / (total_duration_ms_calc / 1000.0))
-                        if total_duration_ms_calc > 0
-                        else FALLBACK_FPS
-                    )
+                    # Calculate expected total duration based on durations list
+                    total_duration_ms = sum(d if d > 0 else 100 for d in test_durations)
+                    expected_duration_s = total_duration_ms / 1000.0
 
                     assert svg_string_default_fps.startswith("<?xml")
                     assert "<svg" in svg_string_default_fps
                     assert "</svg>" in svg_string_default_fps
-                    assert f"<desc>{num_frames} frames at {expected_fps:.6f} FPS</desc>" in svg_string_default_fps
+                    assert (
+                        f"<desc>{num_frames} frames, {expected_duration_s:.3f}s duration</desc>"
+                        in svg_string_default_fps
+                    )
                     assert 'repeatCount="indefinite"' in svg_string_default_fps
-                    assert f"Using calculated average FPS: {expected_fps:.2f}" in caplog.text
                     mock_image_loader_instance.open.assert_called_with(gif_path)
                     mock_image.close.assert_called_once()  # Ensure image is closed
 
@@ -853,52 +863,3 @@ def test_gif_to_animated_svg_closes_image(tmp_path, mock_vtracer_instance_for_te
     with pytest.raises(Exception, match="Simulated close error"):
         gif_to_animated_svg(gif_path, image_loader=mock_image_loader, vtracer_instance=mock_vtracer_instance_for_tests)
     mock_image.close.assert_called()  # should still be called.
-
-
-@pytest.mark.parametrize(
-    ("durations", "expected_fps"),
-    [
-        ([100, 100, 100], 10.0),  # 3 frames @ 100ms = 10 FPS
-        ([50, 50, 50, 50], 20.0),  # 4 frames @ 50ms = 20 FPS
-        ([200, 200], 5.0),  # 2 frames @ 200ms = 5 FPS
-        ([100, 50, 150], 10.0),  # Avg: (3 / (0.1 + 0.05 + 0.15)) = 3 / 0.3 = 10 FPS
-        ([100, 0, 100], 10.0),  # PIL defaults 0 to 100ms -> 3 frames / 0.3s = 10 FPS
-        ([0, 0, 0], 10.0),  # All default to 100ms -> 3 frames / 0.3s = 10 FPS
-        ([100], None),  # Single frame is not animated
-        ([], None),  # No frames
-    ],
-)
-def test_calculate_gif_average_fps(durations, expected_fps):
-    if not durations:
-        mock_img = create_mock_image(is_animated=False, n_frames=0, durations=[])
-    else:
-        mock_img = create_mock_image(is_animated=len(durations) > 1, n_frames=len(durations), durations=durations)
-
-    calculated_fps = _calculate_gif_average_fps(mock_img)
-
-    if expected_fps is None:
-        assert calculated_fps is None
-    else:
-        assert calculated_fps == pytest.approx(expected_fps)
-
-
-def test_calculate_gif_average_fps_eof_error(caplog):
-    """Test handling of EOFError during duration reading."""
-    mock_img = create_mock_image(is_animated=True, n_frames=5, durations=[100, 100, 100, 100, 100])
-    # Make seek raise EOFError after reading some frames
-    original_seek = mock_img.seek.side_effect
-
-    def seek_with_eof(frame_index):
-        if frame_index >= 2:
-            msg = "Simulated EOF"
-            raise EOFError(msg)
-        return original_seek(frame_index)  # Call original side effect
-
-    mock_img.seek.side_effect = seek_with_eof
-
-    with caplog.at_level(logging.WARNING):
-        fps = _calculate_gif_average_fps(mock_img)
-
-    # Should calculate based on frames read before error (2 frames / 0.2s)
-    assert fps == pytest.approx(10.0)
-    assert "EOFError encountered" in caplog.text

@@ -11,6 +11,7 @@
     <meta name="author" content="Romelium">
     <title>FrameSVG: Animated GIF to Animated SVG Converter</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎞️</text></svg>">
 </head>
 
 <body>
@@ -25,7 +26,7 @@
                 <div id="dropZone" class="drop-zone">
                     <div class="drop-content">
                         <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                        <p>Drag & Drop GIF here</p>
+                        <p class="drop-text">Drag & Drop GIF here</p>
                         <p class="or-text">- or -</p>
                         <button id="browseButton" class="secondary-btn">Browse Files</button>
                     </div>
@@ -33,18 +34,18 @@
                 </div>
                 <div id="fileInfo" class="file-info hidden">
                     <span id="fileName"></span>
-                    <button id="removeFile" class="icon-btn" aria-label="Remove file">×</button>
+                    <button id="removeFile" class="icon-btn" aria-label="Remove file" title="Remove file">×</button>
                 </div>
             </div>
 
             <div class="settings-section">
                 <div class="basic-settings">
                     <div class="input-group">
-                        <label for="fps" title="Frames Per Second. Leave empty to calculate from GIF duration.">FPS <span class="tooltip-icon">?</span></label>
+                        <label for="fps">FPS <span class="tooltip-icon" data-tooltip="Frames Per Second. Leave empty to use GIF frame delays.">?</span></label>
                         <input type="number" id="fps" placeholder="Auto" step="0.1" min="0.1">
                     </div>
                     <div class="input-group">
-                        <label for="colormode" title="Color: Standard. Binary: Bright areas become transparent.">Color Mode <span class="tooltip-icon">?</span></label>
+                        <label for="colormode">Color Mode <span class="tooltip-icon" data-tooltip="Color: Standard. Binary: Bright areas become transparent.">?</span></label>
                         <select id="colormode">
                             <option value="color">Color</option>
                             <option value="binary">Binary</option>
@@ -56,11 +57,11 @@
                     <summary>Advanced Options</summary>
                     <div class="params-grid">
                         <div class="input-group">
-                            <label for="filter_speckle" title="Discards small shapes. Higher values reduce file size significantly.">Filter Speckle <span class="tooltip-icon">?</span></label>
+                            <label for="filter_speckle">Filter Speckle <span class="tooltip-icon" data-tooltip="Discards small shapes. Higher values reduce file size significantly.">?</span></label>
                             <input type="number" id="filter_speckle" value="4" min="0">
                         </div>
                         <div class="input-group">
-                            <label for="mode" title="Polygon: Sharp edges (smaller). Spline: Smooth curves.">Mode <span class="tooltip-icon">?</span></label>
+                            <label for="mode">Mode <span class="tooltip-icon" data-tooltip="Polygon: Sharp edges (smaller). Spline: Smooth curves.">?</span></label>
                             <select id="mode">
                                 <option value="polygon">Polygon</option>
                                 <option value="spline">Spline</option>
@@ -68,38 +69,38 @@
                             </select>
                         </div>
                         <div class="input-group">
-                            <label for="hierarchical" title="Stacked: Layers stack. Cutout: Shapes don't overlap.">Hierarchy <span class="tooltip-icon">?</span></label>
+                            <label for="hierarchical">Hierarchy <span class="tooltip-icon" data-tooltip="Stacked: Layers stack. Cutout: Shapes don't overlap.">?</span></label>
                             <select id="hierarchical">
                                 <option value="stacked">Stacked</option>
                                 <option value="cutout">Cutout</option>
                             </select>
                         </div>
                         <div class="input-group">
-                            <label for="color_precision" title="Color quantization bits. Lower = fewer colors.">Color Precision <span class="tooltip-icon">?</span></label>
+                            <label for="color_precision">Color Precision <span class="tooltip-icon" data-tooltip="Color quantization bits. Lower = fewer colors.">?</span></label>
                             <input type="number" id="color_precision" value="8" min="1">
                         </div>
                         <div class="input-group">
-                            <label for="layer_difference" title="Gradient threshold. Higher = fewer layers.">Layer Diff <span class="tooltip-icon">?</span></label>
+                            <label for="layer_difference">Layer Diff <span class="tooltip-icon" data-tooltip="Gradient threshold. Higher = fewer layers.">?</span></label>
                             <input type="number" id="layer_difference" value="16" min="1">
                         </div>
                         <div class="input-group">
-                            <label for="corner_threshold" title="Minimum angle to be considered a corner.">Corner Thresh <span class="tooltip-icon">?</span></label>
+                            <label for="corner_threshold">Corner Thresh <span class="tooltip-icon" data-tooltip="Minimum angle to be considered a corner.">?</span></label>
                             <input type="number" id="corner_threshold" value="60" min="0">
                         </div>
                         <div class="input-group">
-                            <label for="length_threshold" title="Shortest path length to keep.">Length Thresh <span class="tooltip-icon">?</span></label>
+                            <label for="length_threshold">Length Thresh <span class="tooltip-icon" data-tooltip="Shortest path length to keep.">?</span></label>
                             <input type="number" id="length_threshold" value="4.0" step="0.1" min="0">
                         </div>
                         <div class="input-group">
-                            <label for="max_iterations" title="Curve fitting iterations.">Max Iterations <span class="tooltip-icon">?</span></label>
+                            <label for="max_iterations">Max Iterations <span class="tooltip-icon" data-tooltip="Curve fitting iterations.">?</span></label>
                             <input type="number" id="max_iterations" value="10" min="1">
                         </div>
                         <div class="input-group">
-                            <label for="splice_threshold" title="Angle threshold for splitting splines.">Splice Thresh <span class="tooltip-icon">?</span></label>
+                            <label for="splice_threshold">Splice Thresh <span class="tooltip-icon" data-tooltip="Angle threshold for splitting splines.">?</span></label>
                             <input type="number" id="splice_threshold" value="45" min="0">
                         </div>
                         <div class="input-group">
-                            <label for="path_precision" title="Decimal places for coordinates.">Path Precision <span class="tooltip-icon">?</span></label>
+                            <label for="path_precision">Path Precision <span class="tooltip-icon" data-tooltip="Decimal places for coordinates.">?</span></label>
                             <input type="number" id="path_precision" value="8" min="0">
                         </div>
                     </div>
@@ -107,8 +108,11 @@
             </div>
 
             <button id="convertButton" class="primary-btn" disabled>Convert</button>
-            
-            <div id="status" class="status-container"></div>
+
+            <div id="status" class="status-container">
+                <div id="loadingSpinner" class="spinner hidden"></div>
+                <span id="statusText"></span>
+            </div>
 
             <div id="previewArea" class="preview-area hidden">
                 <div class="preview-card">
@@ -124,10 +128,9 @@
                         <!-- SVG injected here -->
                     </div>
                     <p id="svgMeta" class="meta-text"></p>
+                    <a id="downloadLink" class="download-btn hidden" aria-label="Download SVG">Download SVG</a>
                 </div>
             </div>
-            
-            <a id="downloadLink" class="download-btn hidden" aria-label="Download SVG">Download SVG</a>
 
         </main>
 

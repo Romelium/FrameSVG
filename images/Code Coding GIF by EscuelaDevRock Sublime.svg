@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="480" height="470" viewBox="0 0 480 470"><title>Generated Animation</title>
-<desc>4 frames at 7.690000 FPS</desc>
+<desc>4 frames, 0.520s duration</desc>
 <g id="animationGroup">
 <g id="frame0" opacity="0">
 
@@ -11,7 +11,7 @@
 <path d="M0,0 L31,2 L44,6 L45,8 L34,10 L25,10 L16,8 L1,2 Z " fill="#F29238" transform="translate(290,281)"/>
 <path d="M0,0 L18,0 L36,6 L49,12 L45,13 L35,8 L24,5 L-1,2 Z " fill="#F28E31" transform="translate(223,262)"/>
 
-<animate attributeName="opacity" dur="0.520156s" values="0;1;0" keyTimes="0;0.000000;0.250000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="0.520000s" values="0;1;0" keyTimes="0;0.000000;0.250000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame1" opacity="0">
 
@@ -19,7 +19,7 @@
 <path d="M0,0 L9,0 L15,4 L19,11 L22,28 L22,73 L19,84 L14,90 L9,92 L-6,94 L-24,101 L-36,105 L-52,111 L-61,114 L-64,114 L-64,116 L-58,117 L-47,121 L-40,124 L-19,131 L-8,134 L4,139 L13,145 L17,150 L19,166 L21,202 L21,231 L19,238 L11,242 L8,244 L-9,249 L-21,254 L-32,259 L-43,263 L-54,268 L-66,272 L-76,276 L-95,284 L-113,290 L-131,295 L-149,300 L-174,307 L-201,316 L-213,321 L-222,321 L-227,318 L-231,311 L-233,295 L-233,286 L-232,280 L-232,247 L-234,241 L-234,228 L-227,222 L-218,221 L-211,218 L-193,212 L-184,208 L-147,197 L-132,193 L-127,191 L-137,189 L-173,184 L-191,180 L-202,179 L-219,174 L-223,170 L-223,127 L-224,124 L-225,95 L-225,82 L-221,74 L-217,71 L-207,71 L-187,63 L-162,56 L-126,44 L-107,38 L-102,35 L-95,32 L-82,27 L-55,20 L-43,15 L-33,12 L-21,7 L-9,2 Z " fill="#F2953C" transform="translate(340,79)"/>
 <path d="M0,0 L16,1 L29,5 L44,9 L62,15 L79,24 L86,27 L101,32 L113,37 L127,40 L144,41 L147,43 L146,48 L145,49 L116,49 L100,43 L89,37 L74,33 L62,27 L52,23 L43,21 L30,17 L19,13 L4,9 L1,7 L0,4 L-2,2 Z " fill="#F16A2F" transform="translate(213,269)"/>
 
-<animate attributeName="opacity" dur="0.520156s" values="0;1;0" keyTimes="0;0.250000;0.500000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="0.520000s" values="0;1;0" keyTimes="0;0.250000;0.500000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame2" opacity="0">
 
@@ -27,7 +27,7 @@
 <path d="M0,0 L9,0 L13,3 L14,17 L12,31 L12,74 L9,94 L4,100 L-23,106 L-34,109 L-47,112 L-68,119 L-71,121 L-63,124 L-53,126 L-31,129 L-14,134 L4,140 L13,146 L18,155 L21,177 L23,193 L23,236 L19,244 L17,246 L5,246 L-22,258 L-37,265 L-61,276 L-80,284 L-97,290 L-110,295 L-135,303 L-149,305 L-162,306 L-174,308 L-203,310 L-209,312 L-219,312 L-222,310 L-225,296 L-227,285 L-228,282 L-228,272 L-227,268 L-226,247 L-225,238 L-220,231 L-214,228 L-203,225 L-195,222 L-181,219 L-163,214 L-149,209 L-136,205 L-120,197 L-118,194 L-139,195 L-162,195 L-187,192 L-199,191 L-208,189 L-218,184 L-224,179 L-231,171 L-240,163 L-242,158 L-242,138 L-239,126 L-236,119 L-232,95 L-228,86 L-223,80 L-221,80 L-219,76 L-209,74 L-181,70 L-157,64 L-136,57 L-126,52 L-110,44 L-97,38 L-84,33 L-75,29 L-63,25 L-51,20 L-43,16 L-19,8 Z " fill="#F2953C" transform="translate(342,74)"/>
 <path d="M0,0 L10,0 L26,4 L44,8 L67,16 L77,21 L87,29 L96,37 L106,42 L121,44 L125,47 L126,52 L122,57 L113,57 L102,53 L90,47 L87,45 L78,43 L68,39 L51,29 L30,18 L18,15 L4,11 L-8,10 L-14,8 L-12,3 L-7,1 Z " fill="#F16A2F" transform="translate(237,263)"/>
 
-<animate attributeName="opacity" dur="0.520156s" values="0;1;0" keyTimes="0;0.500000;0.750000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="0.520000s" values="0;1;0" keyTimes="0;0.500000;0.750000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 <g id="frame3" opacity="0">
 
@@ -35,7 +35,7 @@
 <path d="M0,0 L8,0 L12,4 L14,9 L15,22 L16,25 L16,43 L15,71 L11,80 L4,87 L-4,93 L-13,98 L-29,102 L-35,104 L-49,107 L-62,111 L-74,116 L-62,123 L-45,129 L-30,136 L-9,142 L10,143 L20,148 L23,153 L24,159 L24,184 L23,209 L21,215 L20,224 L15,227 L9,235 L-1,242 L-13,244 L-23,250 L-32,252 L-45,255 L-53,257 L-62,261 L-75,265 L-99,275 L-112,281 L-130,287 L-144,290 L-157,292 L-175,300 L-188,306 L-213,315 L-218,317 L-229,317 L-237,311 L-241,306 L-244,299 L-244,288 L-234,259 L-231,244 L-228,225 L-224,219 L-221,216 L-194,207 L-175,202 L-159,196 L-150,194 L-139,191 L-133,188 L-131,188 L-133,185 L-147,184 L-160,180 L-177,177 L-193,172 L-211,166 L-222,162 L-228,154 L-230,147 L-232,125 L-232,111 L-231,80 L-228,74 L-222,69 L-211,65 L-201,62 L-186,57 L-169,51 L-156,46 L-139,41 L-129,39 L-115,35 L-100,32 L-85,28 L-55,20 L-50,16 L-39,11 L-26,9 L-17,8 L-4,1 Z " fill="#F2953C" transform="translate(341,78)"/>
 <path d="M0,0 L21,0 L39,6 L55,14 L74,23 L95,28 L126,28 L140,32 L143,33 L143,40 L140,42 L129,42 L120,36 L94,36 L69,32 L51,25 L35,19 L19,15 L-6,15 L-10,11 L-10,6 L-12,5 L-8,4 L-9,1 Z " fill="#F16A2F" transform="translate(218,262)"/>
 
-<animate attributeName="opacity" dur="0.520156s" values="0;1;0" keyTimes="0;0.750000;1.000000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
+<animate attributeName="opacity" dur="0.520000s" values="0;1;0" keyTimes="0;0.750000;1.000000" calcMode="discrete" repeatCount="indefinite" begin="0s"/>
 </g>
 </g>
 </svg>

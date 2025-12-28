@@ -135,34 +135,6 @@ def is_animated_gif(img: ImageWrapper, filepath: str) -> None:
         raise NotAnimatedGifError(filepath)
 
 
-def _calculate_gif_average_fps(img: ImageWrapper) -> float | None:
-    """Calculates the average FPS from GIF frame durations."""
-    if not img.is_animated or img.n_frames <= 1:
-        return None  # Not animated or single frame
-
-    total_duration_ms = 0
-    valid_frames_with_duration = 0
-    try:
-        for i in range(img.n_frames):
-            img.seek(i)
-            # PIL uses 100ms default if duration is missing or 0.
-            # Use this default directly in the sum.
-            duration = img.info.get("duration", 100)
-            # Ensure duration is at least 1ms if it was 0, consistent with some viewers/browsers
-            # treating 0 as a very small delay rather than 100ms.
-            # However, for FPS calculation, using the 100ms default seems more robust.
-            total_duration_ms += duration if duration > 0 else 100
-            valid_frames_with_duration += 1
-    except EOFError:
-        logging.warning("EOFError encountered while reading GIF durations. FPS calculation might be inaccurate.")
-
-    # Avoid division by zero if somehow total_duration_ms is 0 after processing
-    if total_duration_ms <= 0:
-        return None
-
-    return valid_frames_with_duration / (total_duration_ms / 1000.0)
-
-
 def extract_svg_dimensions_from_content(svg_content: str) -> dict[str, int] | None:
     """Extracts width and height from SVG."""
     dims: dict[str, int] = {"width": 0, "height": 0}
@@ -205,12 +177,15 @@ def process_gif_frame(
     frame_number: int,
     vtracer_instance: VTracer,
     vtracer_options: VTracerOptions,
-) -> tuple[str, dict[str, int] | None]:
-    """Processes single GIF frame, converting to SVG."""
+) -> tuple[str, dict[str, int] | None, int]:
+    """Processes single GIF frame, converting to SVG and extracting duration."""
     if not 0 <= frame_number < img.n_frames:
         raise FrameOutOfRangeError(frame_number, img.n_frames)
 
     img.seek(frame_number)
+    # Get duration in milliseconds, default to 100ms if missing
+    duration = img.info.get("duration", 100)
+
     with io.BytesIO() as img_byte_arr:
         img_byte_arr.name = "temp.gif"
         img.save(img_byte_arr, img_format="GIF")
@@ -220,56 +195,87 @@ def process_gif_frame(
     dims = extract_svg_dimensions_from_content(svg_content)
     inner_svg = extract_inner_svg_content_from_full_svg(svg_content) if dims else ""
 
-    return inner_svg, dims
+    return inner_svg, dims, duration
 
 
 def process_gif_frames(
     img: ImageWrapper,
     vtracer_instance: VTracer,
     vtracer_options: VTracerOptions,
-) -> tuple[list[str], dict[str, int]]:
+) -> tuple[list[str], list[int], dict[str, int]]:
     """Processes all GIF frames."""
     frames: list[str] = []
+    durations: list[int] = []
     max_dims = {"width": 0, "height": 0}
 
     for i in range(img.n_frames):
-        inner_svg_content, dims = process_gif_frame(img, i, vtracer_instance, vtracer_options)
+        inner_svg_content, dims, duration = process_gif_frame(img, i, vtracer_instance, vtracer_options)
 
         if dims:
             max_dims["width"] = max(max_dims["width"], dims["width"])
             max_dims["height"] = max(max_dims["height"], dims["height"])
             if inner_svg_content:
                 frames.append(inner_svg_content)
+                durations.append(duration)
 
     if not frames:
         raise NoValidFramesError
 
-    return frames, max_dims
+    return frames, durations, max_dims
 
 
-def create_animated_svg_string(frames: list[str], max_dims: dict[str, int], fps: float) -> str:
+def create_animated_svg_string(
+    frames: list[str], durations: list[int], max_dims: dict[str, int], fps: float | None = None
+) -> str:
     """Generates animated SVG string."""
     if not frames:
         msg = "No frames to generate SVG."
         raise ValueError(msg)
-    if fps <= 0:
-        logging.warning("FPS is non-positive (%.2f), defaulting to fallback FPS %.1f", fps, FALLBACK_FPS)
-        fps = FALLBACK_FPS
-    frame_duration = 1.0 / fps
-    total_duration = frame_duration * len(frames)
+
+    # Calculate frame durations in seconds
+    if fps is not None and fps > 0:
+        # Fixed FPS overrides GIF durations
+        frame_duration = 1.0 / fps
+        frame_durations_s = [frame_duration] * len(frames)
+        total_duration = frame_duration * len(frames)
+    else:
+        # Use GIF durations (convert ms to s)
+        frame_durations_s = []
+        for d in durations:
+            # Ensure duration is at least 1ms if it was 0, or use 100ms default logic
+            d_ms = d if d > 0 else 100
+            frame_durations_s.append(d_ms / 1000.0)
+        total_duration = sum(frame_durations_s)
+
+        if total_duration <= 0:
+            # Fallback if something went wrong
+            fps = FALLBACK_FPS
+            frame_duration = 1.0 / fps
+            frame_durations_s = [frame_duration] * len(frames)
+            total_duration = frame_duration * len(frames)
 
     svg_str = (
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{max_dims["width"]}" height="{max_dims["height"]}" '
         f'viewBox="0 0 {max_dims["width"]} {max_dims["height"]}">'
         f"<title>Generated Animation</title>\n"
-        f"<desc>{len(frames)} frames at {fps:.6f} FPS</desc>\n"
+        f"<desc>{len(frames)} frames, {total_duration:.3f}s duration</desc>\n"
         '<g id="animationGroup">\n'
     )
 
+    cumulative_time = 0.0
     for i, frame_content in enumerate(frames):
-        start_fraction = i / len(frames)
-        end_fraction = (i + 1) / len(frames)
+        current_duration = frame_durations_s[i]
+        start_time = cumulative_time
+        end_time = cumulative_time + current_duration
+
+        start_fraction = start_time / total_duration
+        end_fraction = end_time / total_duration
+
+        # Clamp fractions to 0-1 to avoid floating point errors
+        start_fraction = max(0.0, min(1.0, start_fraction))
+        end_fraction = max(0.0, min(1.0, end_fraction))
+
         svg_str += (
             f'<g id="frame{i}" opacity="0">\n'
             f"{frame_content}\n"
@@ -278,6 +284,7 @@ def create_animated_svg_string(frames: list[str], max_dims: dict[str, int], fps:
             'calcMode="discrete" repeatCount="indefinite" begin="0s"/>\n'
             "</g>\n"
         )
+        cumulative_time += current_duration
 
     svg_str += "</g>\n</svg>\n"
     return svg_str
@@ -316,17 +323,12 @@ def gif_to_animated_svg(
     try:
         is_animated_gif(img, gif_path)
 
-        effective_fps = fps
-        if effective_fps is None:
-            calculated_fps = _calculate_gif_average_fps(img)
-            effective_fps = calculated_fps if calculated_fps is not None else FALLBACK_FPS
-            logging.info("Using calculated average FPS: %.2f (Fallback: %.1f)", effective_fps, FALLBACK_FPS)
-        elif effective_fps <= 0:
-            logging.warning("Provided FPS is non-positive (%.2f), using fallback FPS %.1f", effective_fps, FALLBACK_FPS)
-            effective_fps = FALLBACK_FPS
+        if fps is not None and fps <= 0:
+            logging.warning("Provided FPS is non-positive (%.2f), ignoring.", fps)
+            fps = None
 
-        frames, max_dims = process_gif_frames(img, vtracer_instance, options)
-        return create_animated_svg_string(frames, max_dims, effective_fps)
+        frames, durations, max_dims = process_gif_frames(img, vtracer_instance, options)
+        return create_animated_svg_string(frames, durations, max_dims, fps)
     finally:
         img.close()
 
@@ -385,8 +387,8 @@ def parse_cli_arguments(args: list[str]) -> argparse.Namespace:
         "-f",
         "--fps",
         type=validate_positive_float,
-        default=None,  # Default is now None, handled later
-        help=f"Frames per second. (Default: Use GIF average FPS, fallback: {FALLBACK_FPS}).",
+        default=None,
+        help=f"Frames per second. (Default: Use GIF frame durations, fallback: {FALLBACK_FPS}).",
     )
     parser.add_argument(
         "-l",

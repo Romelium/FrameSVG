@@ -50,6 +50,7 @@ This is a significant improvement over embedding raster images (like GIFs) direc
 *   **Network Efficiency:** SVGs are text-based. When served with Gzip or Brotli compression, they can load significantly faster than GIFs.
 *   **Flexible Tooling:** Available as a [Web App](https://framesvg.romelium.cc), CLI tool, and Python library.
 *   **Highly Configurable:** Fine-tune the vectorization process (speckle filtering, smoothing, color precision) to balance quality vs. file size.
+*   **Variable Frame Rate Support:** Preserves the specific duration of each frame from the original GIF.
 
 ## 🎨 Examples
 
@@ -143,7 +144,7 @@ These options control the VTracer engine. Tweak these to balance **Visual Fideli
 
 | Flag | Option | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `-f` | `--fps` | *Auto* | Animation speed. Defaults to GIF average; falls back to 10. |
+| `-f` | `--fps` | *None* | Animation speed. Defaults to GIF frame delays; falls back to 10. |
 | `-c` | `--colormode` | `color` | `color` (standard) or `binary` (threshold-based transparency). |
 | `-m` | `--mode` | `polygon` | `polygon` (smaller files), `spline` (smoother curves), or `none`. |
 | `-s` | `--filter-speckle` | `4` | **Crucial.** Cleans up noise. Higher = smaller file, less detail. |
