@@ -82,7 +82,7 @@ class FrameOutOfRangeError(FramesvgError):
     """Frame out of Range."""
 
     def __init__(self, frame_number, max_frames):
-        super().__init__(f"Frame number {frame_number} is out of range.  Must be between 0 and {max_frames -1}")
+        super().__init__(f"Frame number {frame_number} is out of range.  Must be between 0 and {max_frames - 1}")
 
 
 class ImageWrapper(Protocol):

@@ -735,9 +735,9 @@ def test_parse_cli_arguments_comprehensive(cli_args, expected_parsed_args):
     # Check only keys present in expected_parsed_args
     for key, expected_value in expected_parsed_args.items():
         assert key in parsed_args_dict, f"Expected key '{key}' not found in parsed args"
-        assert (
-            parsed_args_dict[key] == expected_value
-        ), f"Mismatch for key '{key}': expected {expected_value}, got {parsed_args_dict[key]}"
+        assert parsed_args_dict[key] == expected_value, (
+            f"Mismatch for key '{key}': expected {expected_value}, got {parsed_args_dict[key]}"
+        )
 
 
 @pytest.mark.parametrize(
