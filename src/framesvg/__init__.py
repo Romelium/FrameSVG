@@ -9,6 +9,7 @@ import sys
 from typing import Literal, Protocol, TypedDict
 
 from PIL import Image
+import vtracer
 
 
 class VTracerOptions(TypedDict, total=False):
@@ -24,6 +25,8 @@ class VTracerOptions(TypedDict, total=False):
     splice_threshold: int | None
     path_precision: int | None
 
+
+logger = logging.getLogger(__name__)
 
 FALLBACK_FPS = 10.0
 """Fallback FPS if GIF duration cannot be determined."""
@@ -108,8 +111,6 @@ class PILImageLoader:
 
 class DefaultVTracer:
     def convert_raw_image_to_svg(self, image_bytes: bytes, img_format: str, options: VTracerOptions) -> str:
-        import vtracer
-
         return vtracer.convert_raw_image_to_svg(image_bytes, img_format=img_format, **options)
 
 
@@ -122,10 +123,10 @@ def load_image_wrapper(filepath: str, image_loader: ImageLoader) -> ImageWrapper
     try:
         return image_loader.open(filepath)
     except FileNotFoundError:
-        logging.exception("File not found: %s", filepath)
+        logger.exception("File not found: %s", filepath)
         raise
     except Exception:
-        logging.exception("Error loading image: %s", filepath)
+        logger.exception("Error loading image: %s", filepath)
         raise
 
 
@@ -294,13 +295,13 @@ def save_svg_to_file(svg_string: str, output_path: str) -> None:
     """Writes SVG string to file."""
     if os.path.isdir(output_path):
         msg = f"'{output_path}' is a directory, not a file."
-        logging.error(msg)
+        logger.error(msg)
         raise IsADirectoryError(msg)
     try:
         with open(output_path, "w", encoding="utf-8") as f:
             f.write(svg_string)
     except Exception:
-        logging.exception("Error writing SVG to file: %s", output_path)
+        logger.exception("Error writing SVG to file: %s", output_path)
         raise
 
 
@@ -324,7 +325,7 @@ def gif_to_animated_svg(
         is_animated_gif(img, gif_path)
 
         if fps is not None and fps <= 0:
-            logging.warning("Provided FPS is non-positive (%.2f), ignoring.", fps)
+            logger.warning("Provided FPS is non-positive (%.2f), ignoring.", fps)
             fps = None
 
         frames, durations, max_dims = process_gif_frames(img, vtracer_instance, options)
@@ -448,14 +449,14 @@ def main() -> None:
         }
 
         gif_to_animated_svg_write(args.gif_path, output_path, vtracer_options=vtracer_options, fps=args.fps)
-        logging.info("Converted %s to %s", args.gif_path, output_path)
+        logger.info("Converted %s to %s", args.gif_path, output_path)
     except SystemExit as e:
         sys.exit(e.code)
     except FramesvgError:
         # Specific, expected errors are logged within the functions
         # Log general message here for unexpected FramesvgError subclasses
-        logging.exception("FrameSVG processing failed. Check previous logs for details.")
+        logger.exception("FrameSVG processing failed. Check previous logs for details.")
         sys.exit(1)
     except Exception:
-        logging.exception("An unexpected error occurred.")
+        logger.exception("An unexpected error occurred.")
         sys.exit(1)

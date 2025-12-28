@@ -401,7 +401,7 @@ def test_check_if_animated_gif_positive(mock_image_instance):
 
 def test_check_if_animated_gif_negative(mock_image_instance):
     mock_image_instance.is_animated = False  # Set to False
-    with pytest.raises(NotAnimatedGifError, match="test.gif is not an animated GIF."):
+    with pytest.raises(NotAnimatedGifError, match=r"test\.gif is not an animated GIF\."):
         is_animated_gif(mock_image_instance, "test.gif")
 
 
@@ -435,7 +435,7 @@ def test_create_animated_svg_string_edge_cases_tests():
     test_dims = {"width": 100, "height": 100}
     dummy_durations = [100]
 
-    with pytest.raises(ValueError, match="No frames to generate SVG."):  # type: ignore
+    with pytest.raises(ValueError, match=r"No frames to generate SVG\."):  # type: ignore
         create_animated_svg_string([], [], test_dims, FALLBACK_FPS)
 
     single_frame_svg = create_animated_svg_string(["<path/>"], dummy_durations, test_dims, FALLBACK_FPS)
@@ -826,7 +826,7 @@ def test_gif_to_animated_svg_closes_image(tmp_path, mock_vtracer_instance_for_te
     gif_path = create_temp_gif(tmp_path)
     mock_image = create_mock_image()
     mock_image_loader = Mock(return_value=mock_image)  # Mock Image Loader
-    mock_image_loader.open.return_value = mock_image  #
+    mock_image_loader.open.return_value = mock_image
 
     # Test case 1: Successful conversion.
     gif_to_animated_svg(gif_path, image_loader=mock_image_loader, vtracer_instance=mock_vtracer_instance_for_tests)
