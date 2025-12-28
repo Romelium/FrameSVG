@@ -40,6 +40,7 @@ This is a significant improvement over embedding raster images (like GIFs) direc
   - [Command Line Interface](#command-line-interface)
   - [Python Library](#python-library)
 - [Configuration & Options](#-configuration--options)
+- [API Reference](#-api-reference)
 - [Optimization Guide](#-optimization-guide)
 - [Development](#-development)
 
@@ -154,6 +155,37 @@ These options control the VTracer engine. Tweak these to balance **Visual Fideli
 | | `--corner-threshold` | `60` | Minimum angle to be considered a corner. |
 | | `--length-threshold` | `4.0` | Minimum path length to render. |
 | | `--splice-threshold` | `45` | Angle threshold for splitting splines. |
+
+## 📚 API Reference
+
+### `gif_to_animated_svg`
+
+```python
+def gif_to_animated_svg(
+    gif_path: str,
+    vtracer_options: dict | None = None,
+    fps: float | None = None
+) -> str
+```
+
+Reads a GIF file and returns the animated SVG content as a string.
+
+*   **`gif_path`**: Path to the source GIF.
+*   **`vtracer_options`**: A dictionary of VTracer parameters. Keys correspond to the CLI flags above, but use underscores instead of hyphens (e.g., `filter_speckle`, `color_precision`).
+*   **`fps`**: Force a specific frame rate. If `None`, uses the GIF's original frame delays.
+
+### `gif_to_animated_svg_write`
+
+```python
+def gif_to_animated_svg_write(
+    gif_path: str,
+    output_svg_path: str,
+    vtracer_options: dict | None = None,
+    fps: float | None = None
+) -> None
+```
+
+Reads a GIF file, converts it, and saves the result directly to `output_svg_path`.
 
 ## 📉 Optimization Guide
 
